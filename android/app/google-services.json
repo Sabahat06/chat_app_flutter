@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "951977835601",
+    "project_id": "emailpassword-5369c",
+    "storage_bucket": "emailpassword-5369c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951977835601:android:7f0b7d2b8677c14b76cc70",
+        "android_client_info": {
+          "package_name": "com.example.email_password_login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951977835601-gt228ed8pvbrlsgje1s5ai56v2j3pja0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.email_password_login",
+            "certificate_hash": "154aaf071c8f4a5bd2a2f7cbf6c92f617afc8d01"
+          }
+        },
+        {
+          "client_id": "951977835601-6nlh7g804r7u9rt6s148hgpb60f3cjce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfNnqpW0TEgyOnRLQ8_f54CShB1pxzmGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951977835601-6nlh7g804r7u9rt6s148hgpb60f3cjce.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "951977835601-capeie7j414kb48ok9tadagbnsif36g7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.emailPasswordLogin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951977835601:android:07ae6b0a8948f85a76cc70",
+        "android_client_info": {
+          "package_name": "com.sbs.email_password_login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951977835601-g12d8j41olnpbo7lnj55qj3p3djikgh0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sbs.email_password_login",
+            "certificate_hash": "154aaf071c8f4a5bd2a2f7cbf6c92f617afc8d01"
+          }
+        },
+        {
+          "client_id": "951977835601-6nlh7g804r7u9rt6s148hgpb60f3cjce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfNnqpW0TEgyOnRLQ8_f54CShB1pxzmGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951977835601-6nlh7g804r7u9rt6s148hgpb60f3cjce.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "951977835601-capeie7j414kb48ok9tadagbnsif36g7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.emailPasswordLogin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
