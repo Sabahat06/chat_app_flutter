@@ -1,4 +1,5 @@
 import 'package:email_password_login/screens/home_screen.dart';
+import 'package:email_password_login/screens/phone_number_authentication.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
 import 'package:email_password_login/screens/reset_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -26,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   
   // string for displaying the error Message
-  String? errorMessage;
+  String errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
-        if (value!.isEmpty) {
+        if (value.isEmpty) {
           return ("Please Enter Your Email");
         }
         // reg expression for email validation
@@ -47,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return null;
       },
       onSaved: (value) {
-        emailController.text = value!;
+        emailController.text = value;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -67,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
         obscureText: true,
         validator: (value) {
           RegExp regex = new RegExp(r'^.{6,}$');
-          if (value!.isEmpty) {
+          if (value.isEmpty) {
             return ("Password is required for login");
           }
           if (!regex.hasMatch(value)) {
@@ -75,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         onSaved: (value) {
-          passwordController.text = value!;
+          passwordController.text = value;
         },
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
@@ -130,6 +131,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhoneNumber()));
+                          },
+                          child: Text("Sign in with Phone Number", style: TextStyle(fontSize: 17, color: Colors.redAccent,),)
+                        ),
+                      ]
+                    ),
+                    SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
                         Text("Don't have an account? ", style: TextStyle(fontSize: 16, color: Colors.black),),
                         GestureDetector(
                           onTap: () {
@@ -140,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(
                               color: Colors.redAccent,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15
+                              fontSize: 17
                             ),
                           ),
                         )
@@ -171,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // login function
   void signIn(String email, String password) async {
     isLoading.value = true;
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState.validate()) {
       try {
         await _auth.signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
@@ -202,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage!);
+        Fluttertoast.showToast(msg: errorMessage);
         print(error.code);
       }
     }

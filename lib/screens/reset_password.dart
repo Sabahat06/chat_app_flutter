@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({Key? key}) : super(key: key);
+  const ResetPassword({Key key}) : super(key: key);
 
   @override
   _ResetPasswordState createState() => _ResetPasswordState();
@@ -17,13 +17,12 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   // editing controller
   final TextEditingController emailController = new TextEditingController();
-  final TextEditingController passwordController = new TextEditingController();
 
   // firebase
   final _auth = FirebaseAuth.instance;
 
   // string for displaying the error Message
-  String? errorMessage;
+  String errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         controller: emailController,
         keyboardType: TextInputType.emailAddress,
         validator: (value) {
-          if (value!.isEmpty) {
+          if (value.isEmpty) {
             return ("Please Enter Your Email");
           }
           // reg expression for email validation
@@ -44,7 +43,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           return null;
         },
         onSaved: (value) {
-          emailController.text = value!;
+          emailController.text = value;
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
@@ -77,6 +76,17 @@ class _ResetPasswordState extends State<ResetPassword> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.red),
+          onPressed: () {
+            // passing this to our root
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -116,7 +126,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   // login function
   void resetPassword(String email) async {
     isLoading.value = true;
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState.validate()) {
       try {
         await _auth.sendPasswordResetEmail(email: email)
             .then((uid) => {
@@ -147,7 +157,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage!);
+        Fluttertoast.showToast(msg: errorMessage);
         print(error.code);
       }
     }

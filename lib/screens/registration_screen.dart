@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({Key? key}) : super(key: key);
+  const RegistrationScreen({Key key}) : super(key: key);
 
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
@@ -18,7 +18,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
   
   // string for displaying the error Message
-  String? errorMessage;
+  String errorMessage;
 
 
   // our form key
@@ -39,7 +39,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       keyboardType: TextInputType.name,
       validator: (value) {
         RegExp regex = new RegExp(r'^.{3,}$');
-        if (value!.isEmpty) {
+        if (value.isEmpty) {
           return ("First Name cannot be Empty");
         }
         if (!regex.hasMatch(value)) {
@@ -48,7 +48,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         return null;
       },
       onSaved: (value) {
-        firstNameEditingController.text = value!;
+        firstNameEditingController.text = value;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -67,13 +67,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       controller: secondNameEditingController,
       keyboardType: TextInputType.name,
       validator: (value) {
-        if (value!.isEmpty) {
+        if (value.isEmpty) {
           return ("Second Name cannot be Empty");
         }
         return null;
       },
       onSaved: (value) {
-        secondNameEditingController.text = value!;
+        secondNameEditingController.text = value;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -92,7 +92,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       controller: emailEditingController,
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
-        if (value!.isEmpty) {
+        if (value.isEmpty) {
           return ("Please Enter Your Email");
         }
         // reg expression for email validation
@@ -103,7 +103,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         return null;
       },
       onSaved: (value) {
-        firstNameEditingController.text = value!;
+        firstNameEditingController.text = value;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -123,7 +123,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       obscureText: true,
       validator: (value) {
         RegExp regex = new RegExp(r'^.{6,}$');
-        if (value!.isEmpty) {
+        if (value.isEmpty) {
           return ("Password is required for login");
         }
         if (!regex.hasMatch(value)) {
@@ -131,7 +131,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         }
       },
       onSaved: (value) {
-        firstNameEditingController.text = value!;
+        firstNameEditingController.text = value;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -157,7 +157,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         return null;
       },
       onSaved: (value) {
-        confirmPasswordEditingController.text = value!;
+        confirmPasswordEditingController.text = value;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
@@ -215,19 +215,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: 180, child: Image.asset("assets/logo.png", fit: BoxFit.contain,)),
-                    SizedBox(height: 45),
+                    SizedBox(height: 10),
                     firstNameField,
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     secondNameField,
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     emailField,
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     passwordField,
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     confirmPasswordField,
-                    SizedBox(height: 20),
-                    Obx(() => isLoading.value ? Center(child: CircularProgressIndicator(),) : signUpButton),
                     SizedBox(height: 15),
+                    Obx(() => isLoading.value ? Center(child: CircularProgressIndicator(),) : signUpButton),
+                    SizedBox(height: 10),
                   ],
                 ),
               ),
@@ -239,12 +239,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
   void signUp(String email, String password) async {
     isLoading.value = true;
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState.validate()) {
       try {
         await _auth.createUserWithEmailAndPassword(email: email, password: password)
             .then((value) => {postDetailsToFirestore()})
             .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
+          Fluttertoast.showToast(msg: e.message);
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
@@ -269,7 +269,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage!);
+        Fluttertoast.showToast(msg: errorMessage);
         print(error.code);
       }
     }
@@ -281,12 +281,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     // sedning these values
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _auth.currentUser;
+    User user = _auth.currentUser;
 
     UserModel userModel = UserModel();
 
     // writing all the values
-    userModel.email = user!.email;
+    userModel.email = user.email;
     userModel.uid = user.uid;
     userModel.firstName = firstNameEditingController.text;
     userModel.secondName = secondNameEditingController.text;

@@ -1,38 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/model/user_model.dart';
+import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  User? user = FirebaseAuth.instance.currentUser;
+  AuthController authController = Get.find();
+  User user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
   @override
   void initState() {
     super.initState();
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((value) {
+    FirebaseFirestore.instance.collection("users").doc(user.uid).get().then((value) {
       this.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
+      authController.userModel.value = this.loggedInUser;
+      UserModel.saveUserToCache(this.loggedInUser);
     });
   }
 
   @override
   Widget build(BuildContext context) {
 
-    final signUpButton = Material(
+    final logOutButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
       color: Colors.redAccent,
@@ -41,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
           logout(context);
+          authController.isLogedIn.value = false;
+          UserModel.deleteCachedUser();
         },
         child: Text(
           "Log out",
@@ -65,45 +68,49 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 150, child: Image.asset("assets/logo.png", fit: BoxFit.contain),),
               Text("Welcome Back", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
               SizedBox(height: 10,),
-              Row(
-                children: [
-                  Text("Name: ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18
-                    )
+              authController.userModel.value.firstName == null && authController.userModel.value.secondName==null
+                  ? Container()
+                  : Row(
+                    children: [
+                      Text("Name:  ",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        )
+                      ),
+                      Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        )
+                      ),
+                    ],
                   ),
-                  Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18
-                    )
-                  ),
-                ],
-              ),
               SizedBox(height: 7,),
-              Row(
-                children: [
-                  Text("Email:  ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18
-                    )
+              authController.userModel.value.email == null
+                  ? Container()
+                  : Row(
+                    children: [
+                      Text("Email:  ",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        )
+                      ),
+                      Text("${loggedInUser.email}",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        )
+                      ),
+                    ],
                   ),
-                  Text("${loggedInUser.email}",
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    )
-                  ),
-                ],
-              ),
               SizedBox(height: 15,),
-              signUpButton,
+              logOutButton,
               // ActionChip(
               //   labelPadding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
               //   backgroundColor: Colors.grey,
