@@ -31,6 +31,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final signUpButton = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.redAccent,
+      child: MaterialButton(
+        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: () {
+          logout(context);
+        },
+        child: Text(
+          "Log out",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        )
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Welcome"),
@@ -44,27 +63,55 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(height: 150, child: Image.asset("assets/logo.png", fit: BoxFit.contain),),
-              Text("Welcome Back", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              Text("Welcome Back", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
               SizedBox(height: 10,),
-              Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w500,
-                )
+              Row(
+                children: [
+                  Text("Name: ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                    )
+                  ),
+                  Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                    )
+                  ),
+                ],
               ),
-              Text("${loggedInUser.email}",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w500,
-                )
+              SizedBox(height: 7,),
+              Row(
+                children: [
+                  Text("Email:  ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                    )
+                  ),
+                  Text("${loggedInUser.email}",
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    )
+                  ),
+                ],
               ),
               SizedBox(height: 15,),
-              ActionChip(
-                label: Text("Logout"),
-                onPressed: () {
-                  logout(context);
-                }
-              ),
+              signUpButton,
+              // ActionChip(
+              //   labelPadding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+              //   backgroundColor: Colors.grey,
+              //   label: Text("Logout", style: TextStyle(color: Colors.white, fontSize: 16),),
+              //   onPressed: () {
+              //     logout(context);
+              //   }
+              // ),
             ],
           ),
         ),
