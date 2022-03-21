@@ -1,4 +1,0 @@
-io/flutter/plugins/GeneratedPluginRegistrant.java
- io.flutter.plugins.GeneratedPluginRegistrant
-com/sbs/email_password_login/BuildConfig.java
- com.sbs.email_password_login.BuildConfig

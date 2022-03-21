@@ -90,17 +90,17 @@ class _LoginScreenState extends State<LoginScreen> {
       borderRadius: BorderRadius.circular(30),
       color: Colors.redAccent,
       child: MaterialButton(
-          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          minWidth: MediaQuery.of(context).size.width,
-          onPressed: () {
-            signIn(emailController.text, passwordController.text);
-          },
-          child: Text(
-            "Login",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-          )),
+        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: () {
+          signIn(emailController.text, passwordController.text);
+        },
+        child: Text(
+          "Login",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        )
+      ),
     );
 
     return Scaffold(
@@ -117,12 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                        height: 200,
-                        child: Image.asset(
-                          "assets/logo.png",
-                          fit: BoxFit.contain,
-                        )),
+                    SizedBox(height: 200, child: Image.asset("assets/logo.png", fit: BoxFit.contain,)),
                     SizedBox(height: 45),
                     emailField,
                     SizedBox(height: 25),
@@ -131,26 +126,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     Obx(() => isLoading.value ? Center(child: CircularProgressIndicator(),) : loginButton),
                     SizedBox(height: 15),
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Don't have an account? "),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          RegistrationScreen()));
-                            },
-                            child: Text(
-                              "SignUp",
-                              style: TextStyle(
-                                  color: Colors.redAccent,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("Don't have an account? "),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationScreen()));
+                          },
+                          child: Text(
+                            "SignUp",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15
                             ),
-                          )
-                        ])
+                          ),
+                        )
+                      ]
+                    )
                   ],
                 ),
               ),
@@ -169,7 +162,9 @@ class _LoginScreenState extends State<LoginScreen> {
         await _auth.signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
             Fluttertoast.showToast(msg: "Login Successful"),
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen())),});
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen())),
+          }
+        );
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":

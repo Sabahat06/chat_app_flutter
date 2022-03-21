@@ -43,35 +43,28 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(
-                height: 150,
-                child: Image.asset("assets/logo.png", fit: BoxFit.contain),
-              ),
-              Text(
-                "Welcome Back",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 150, child: Image.asset("assets/logo.png", fit: BoxFit.contain),),
+              Text("Welcome Back", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              SizedBox(height: 10,),
               Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w500,
-                  )),
-              Text("${loggedInUser.email}",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w500,
-                  )),
-              SizedBox(
-                height: 15,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                )
               ),
+              Text("${loggedInUser.email}",
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                )
+              ),
+              SizedBox(height: 15,),
               ActionChip(
-                  label: Text("Logout"),
-                  onPressed: () {
-                    logout(context);
-                  }),
+                label: Text("Logout"),
+                onPressed: () {
+                  logout(context);
+                }
+              ),
             ],
           ),
         ),
@@ -82,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // the logout function
   Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 }
