@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_password_login/model/user_model.dart';
+import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/home_screen.dart';
 import 'package:email_password_login/screens/phone_number_authentication.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
@@ -17,7 +20,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   // form key
   final _formKey = GlobalKey<FormState>();
+  UserModel loggedInUser = UserModel();
   RxBool isLoading = false.obs;
+  AuthController authController = Get.find();
 
   // editing controller
   final TextEditingController emailController = new TextEditingController();
@@ -188,7 +193,14 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         await _auth.signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
-            Fluttertoast.showToast(msg: "Login Successful"),
+            Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.green, fontSize: 16, textColor: Colors.white),
+            FirebaseFirestore.instance.collection("users").doc(uid.user.uid).get().then((value) {
+              this.loggedInUser = UserModel.fromMap(value.data());
+              authController.userModel.value = this.loggedInUser;
+              authController.isLogedIn.value = true;
+              UserModel.saveUserToCache(this.loggedInUser);
+              }
+            ),
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen())),
           }
         );
@@ -215,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage);
+        Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.redAccent, fontSize: 16, textColor: Colors.white);
         print(error.code);
       }
     }

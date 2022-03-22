@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_password_login/model/user_model.dart';
+import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,8 @@ class VerifyPhoneNumber extends StatefulWidget {
 }
 
 class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
+  UserModel loggedInUser = UserModel();
+  AuthController authController = Get.find();
   // form key
   final _formKey = GlobalKey<FormState>();
   RxBool isLoading = false.obs;
@@ -42,8 +47,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
           return ("Please Enter Your Phone Number");
         }
         // reg expression for email validation
-        if (!RegExp("r'\+994\s+\([0-9]{2}\)\s+[0-9]{3}\s+[0-9]{2}\s+[0-9]{2}'")
-            .hasMatch(value)) {
+        if (!RegExp("r'\+994\s+\([0-9]{2}\)\s+[0-9]{3}\s+[0-9]{2}\s+[0-9]{2}'").hasMatch(value)) {
           return ("Please Enter a valid Phone Number");
         }
         return null;
@@ -180,7 +184,18 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verficationIDReceived, smsCode: otp);
     try {
       await _auth.signInWithCredential(credential).then((value) => {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()))
+        FirebaseFirestore.instance.collection("users").where("phoneNumber", isEqualTo: phoneController.text).get().then((value) {
+          print(value.docs[0].id);
+          FirebaseFirestore.instance.collection("users").doc(value.docs[0].id).get().then((firebaseUser) {
+            this.loggedInUser = UserModel.fromMap(firebaseUser.data());
+            Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.green, fontSize: 16, textColor: Colors.white);
+            authController.userModel.value = this.loggedInUser;
+            authController.isLogedIn.value = true;
+            UserModel.saveUserToCache(this.loggedInUser);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+          });
+          }
+        ),
       });
     } on FirebaseAuthException catch (error) {
       // switch (error.code) {
@@ -205,10 +220,20 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
       //   default:
       //     errorMessage = "An undefined Error happened.";
       // }
-      Fluttertoast.showToast(msg: error.code);
+      Fluttertoast.showToast(msg: error.code, backgroundColor: Colors.redAccent, fontSize: 16, textColor: Colors.white);
       print(error.code);
     }
 
     isLoading.value = false;
+  }
+
+  getUserFromFirebase(String userID) async {
+    FirebaseFirestore.instance.collection("users").doc(userID).get().then((value) {
+      this.loggedInUser = UserModel.fromMap(value.data());
+      Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.green, fontSize: 16, textColor: Colors.white);
+      authController.userModel.value = this.loggedInUser;
+      authController.isLogedIn.value = true;
+      UserModel.saveUserToCache(this.loggedInUser);
+    });
   }
 }

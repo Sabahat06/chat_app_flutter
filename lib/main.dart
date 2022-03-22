@@ -1,6 +1,7 @@
 import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/home_screen.dart';
 import 'package:email_password_login/screens/login_screen.dart';
+import 'package:email_password_login/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,9 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       debugShowCheckedModeBanner: false,
-      home: authController.isLogedIn.value
-          ? HomeScreen()
-          : LoginScreen(),
+      home: SplashScreen()
     );
   }
 }

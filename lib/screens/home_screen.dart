@@ -22,12 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    FirebaseFirestore.instance.collection("users").doc(user.uid).get().then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
-      setState(() {});
-      authController.userModel.value = this.loggedInUser;
-      UserModel.saveUserToCache(this.loggedInUser);
-    });
+    // FirebaseFirestore.instance.collection("users").doc(user.uid).get().then((value) {
+    //   this.loggedInUser = UserModel.fromMap(value.data());
+    //   setState(() {});
+    //   authController.userModel.value = this.loggedInUser;
+    //   UserModel.saveUserToCache(this.loggedInUser);
+    // });
   }
 
   @override
@@ -68,47 +68,49 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 150, child: Image.asset("assets/logo.png", fit: BoxFit.contain),),
               Text("Welcome Back", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
               SizedBox(height: 10,),
-              authController.userModel.value.firstName == null && authController.userModel.value.secondName==null
-                  ? Container()
-                  : Row(
-                    children: [
-                      Text("Name:  ",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18
-                        )
-                      ),
-                      Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18
-                        )
-                      ),
-                    ],
-                  ),
+              Obx(() => authController.userModel.value.firstName == null && authController.userModel.value.secondName==null
+                ? Container()
+                : Row(
+                  children: [
+                    Text("Name:  ",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                      )
+                    ),
+                    Text("${authController.userModel.value.firstName} ${authController.userModel.value.secondName}",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                      )
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 7,),
-              authController.userModel.value.email == null
-                  ? Container()
-                  : Row(
-                    children: [
-                      Text("Email:  ",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18
-                        )
-                      ),
-                      Text("${loggedInUser.email}",
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                    ],
-                  ),
+              Obx(() => authController.userModel.value.email == null
+                ? Container()
+                : Row(
+                  children: [
+                    Text("Email:  ",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                      )
+                    ),
+                    Text("${authController.userModel.value.email}",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      )
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 15,),
               logOutButton,
               // ActionChip(

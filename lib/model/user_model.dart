@@ -5,12 +5,14 @@ class UserModel {
   String email;
   String firstName;
   String secondName;
+  String phoneNumber;
 
   UserModel({
     this.uid,
     this.email,
     this.firstName,
-    this.secondName
+    this.secondName,
+    this.phoneNumber
   });
 
   // receiving data from server
@@ -20,6 +22,7 @@ class UserModel {
       email: map['email'],
       firstName: map['firstName'],
       secondName: map['secondName'],
+      phoneNumber: map['phoneNumber'],
     );
   }
 
@@ -28,6 +31,7 @@ class UserModel {
     email = json['email'];
     firstName = json['firstName'];
     secondName = json['secondName'];
+    phoneNumber = json['phoneNumber'];
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +40,7 @@ class UserModel {
     data['email'] = this.email;
     data['firstName'] = this.firstName;
     data['secondName'] = this.secondName;
+    data['phoneNumber'] = this.phoneNumber;
     return data;
   }
 
@@ -46,6 +51,7 @@ class UserModel {
       'email': email,
       'firstName': firstName,
       'secondName': secondName,
+      'phoneNumber': phoneNumber
     };
   }
 

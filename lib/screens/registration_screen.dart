@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/model/user_model.dart';
+import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  AuthController authController = Get.find();
   RxBool isLoading = false.obs;
   final _auth = FirebaseAuth.instance;
   
@@ -29,10 +31,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final emailEditingController = new TextEditingController();
   final passwordEditingController = new TextEditingController();
   final confirmPasswordEditingController = new TextEditingController();
+  final phoneNumberEditingController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    //first name field
+    ///first name field
     final firstNameField = TextFormField(
       autofocus: false,
       controller: firstNameEditingController,
@@ -61,7 +64,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       )
     );
 
-    //second name field
+    ///second name field
     final secondNameField = TextFormField(
       autofocus: false,
       controller: secondNameEditingController,
@@ -86,7 +89,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       )
     );
 
-    //email field
+    ///email field
     final emailField = TextFormField(
       autofocus: false,
       controller: emailEditingController,
@@ -116,7 +119,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       )
     );
 
-    //password field
+    ///Phone number field
+    final phoneNumberField = TextFormField(
+      autofocus: false,
+      controller: phoneNumberEditingController,
+      validator: (value) {
+        if (value.isEmpty) {
+          return ("First Name cannot be Empty");
+        }
+        // if (!RegExp("r'\+994\s+\([0-9]{2}\)\s+[0-9]{3}\s+[0-9]{2}\s+[0-9]{2}'").hasMatch(value)) {
+        //   return ("Please Enter a valid Phone Number");
+        // }
+        return null;
+      },
+      onSaved: (value) {
+        phoneNumberEditingController.text = value;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        prefixIcon: Icon(Icons.phone),
+        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        hintText: "Phone Number",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      )
+    );
+
+    ///password field
     final passwordField = TextFormField(
       autofocus: false,
       controller: passwordEditingController,
@@ -144,7 +174,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       )
     );
 
-    //confirm password field
+    ///confirm password field
     final confirmPasswordField = TextFormField(
       autofocus: false,
       controller: confirmPasswordEditingController,
@@ -170,7 +200,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       )
     );
 
-    //signup button
+    ///signup button
     final signUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
@@ -222,6 +252,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(height: 10),
                     emailField,
                     SizedBox(height: 10),
+                    phoneNumberField,
+                    SizedBox(height: 10),
                     passwordField,
                     SizedBox(height: 10),
                     confirmPasswordField,
@@ -242,9 +274,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (_formKey.currentState.validate()) {
       try {
         await _auth.createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e.message);
+          .then((value) => {
+            postDetailsToFirestore()}
+            )
+          .catchError((e) {
+          Fluttertoast.showToast(msg: e.message, backgroundColor: Colors.redAccent, fontSize: 16, textColor: Colors.white,);
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
@@ -269,12 +303,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage);
+        Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.redAccent, fontSize: 16, textColor: Colors.white);
         print(error.code);
       }
     }
     isLoading.value = false;
   }
+
+  ///Post user data in firebase
   postDetailsToFirestore() async {
     // calling our firestore
     // calling our user model
@@ -290,16 +326,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     userModel.uid = user.uid;
     userModel.firstName = firstNameEditingController.text;
     userModel.secondName = secondNameEditingController.text;
+    userModel.phoneNumber = phoneNumberEditingController.text;
 
-    await firebaseFirestore
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
+
+    ///Storing User Locally
+    authController.userModel.value = userModel;
+    authController.isLogedIn.value = true;
+    UserModel.saveUserToCache(userModel);
+
+    ///storing data in firebase
+    await firebaseFirestore.collection("users").doc(user.uid).set(userModel.toMap());
     Fluttertoast.showToast(msg: "Account created successfully :) ");
 
-    Navigator.pushAndRemoveUntil(
-        (context),
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-        (route) => false);
+    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => HomeScreen()), (route) => false);
   }
 }
