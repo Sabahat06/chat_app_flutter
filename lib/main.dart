@@ -1,6 +1,4 @@
 import 'package:email_password_login/screens/auth_controller.dart';
-import 'package:email_password_login/screens/home_screen.dart';
-import 'package:email_password_login/screens/login_screen.dart';
 import 'package:email_password_login/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

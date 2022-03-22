@@ -46,10 +46,16 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
         if (value.isEmpty) {
           return ("Please Enter Your Phone Number");
         }
-        // reg expression for email validation
-        if (!RegExp("r'\+994\s+\([0-9]{2}\)\s+[0-9]{3}\s+[0-9]{2}\s+[0-9]{2}'").hasMatch(value)) {
+        if(!value.contains('+92')) {
+          return ("Please Enter +92 instead of 0");
+        }
+        if(value.length<13) {
           return ("Please Enter a valid Phone Number");
         }
+        // reg expression for email validation
+        // if (!RegExp("r'\+994\s+\([0-9]{2}\)\s+[0-9]{3}\s+[0-9]{2}\s+[0-9]{2}'").hasMatch(value)) {
+        //   return ("Please Enter a valid Phone Number");
+        // }
         return null;
       },
       onSaved: (value) {
