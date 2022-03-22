@@ -47,7 +47,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
           return ("Please Enter Your Phone Number");
         }
         if(!value.contains('+92')) {
-          return ("Please Enter +92 instead of 0");
+          return ("Please Start your number with +92 instead of 0");
         }
         if(value.length<13) {
           return ("Please Enter a valid Phone Number");

@@ -127,6 +127,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         if (value.isEmpty) {
           return ("First Name cannot be Empty");
         }
+        if(!value.contains('+92')) {
+          return ("Please Start your number with +92 instead of 0");
+        }
+        if(value.length<13) {
+          return ("Please Enter a valid Phone Number");
+        }
         // if (!RegExp("r'\+994\s+\([0-9]{2}\)\s+[0-9]{3}\s+[0-9]{2}\s+[0-9]{2}'").hasMatch(value)) {
         //   return ("Please Enter a valid Phone Number");
         // }
