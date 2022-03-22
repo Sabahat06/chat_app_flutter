@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Email And Password Login',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.green,
       ),
       debugShowCheckedModeBanner: false,
       home: SplashScreen()

@@ -96,7 +96,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
     final verifyButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
-      color: Colors.redAccent,
+      color: Colors.greenAccent[400],
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
@@ -107,10 +107,12 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
             verifyPhoneNumber(phoneController.text);
           }
         },
-        child: Text(
-          "VERIFY",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        child: Obx(
+          () => Text(
+            showOTPField.value ? "VERIFY & CONTINUE" : "GENERATE OTP",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         )
       ),
     );
@@ -121,7 +123,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.red),
+          icon: Icon(Icons.arrow_back, color: Colors.greenAccent[400]),
           onPressed: () {
             // passing this to our root
             Navigator.of(context).pop();
@@ -140,8 +142,11 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 15),
                     SizedBox(height: 180, child: Image.asset("assets/logo.png", fit: BoxFit.contain,)),
+                    Obx(() => Text( showOTPField.value ? "OTP Verification" : "Enter your Phone Number" , style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.greenAccent[400]),)),
+                    SizedBox(height: 7),
+                    Text(showOTPField.value ? "Enter the OTP send to ${phoneController.text}" : 'We will send you the 6 digits verification code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
+                    SizedBox(height: 15),
                     Obx(() => showOTPField.value ? otpField : phoneField,),
                     SizedBox(height: 15),
                     Obx(() => isLoading.value ? Center(child: CircularProgressIndicator(),) : verifyButton),
@@ -186,16 +191,20 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
       await _auth.signInWithCredential(credential).then((value) => {
         FirebaseFirestore.instance.collection("users").where("phoneNumber", isEqualTo: phoneController.text).get().then((value) {
           print(value.docs[0].id);
-          FirebaseFirestore.instance.collection("users").doc(value.docs[0].id).get().then((firebaseUser) {
-            this.loggedInUser = UserModel.fromMap(firebaseUser.data());
-            Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.green, fontSize: 16, textColor: Colors.white);
-            authController.userModel.value = this.loggedInUser;
-            authController.isLogedIn.value = true;
-            UserModel.saveUserToCache(this.loggedInUser);
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
-          });
+          if(value.docs[0].id == null) {
+            Fluttertoast.showToast(msg: "Please register your account", backgroundColor: Colors.green, fontSize: 16, textColor: Colors.white);
           }
-        ),
+          else{
+            FirebaseFirestore.instance.collection("users").doc(value.docs[0].id).get().then((firebaseUser) {
+              this.loggedInUser = UserModel.fromMap(firebaseUser.data());
+              Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.green, fontSize: 16, textColor: Colors.white);
+              authController.userModel.value = this.loggedInUser;
+              authController.isLogedIn.value = true;
+              UserModel.saveUserToCache(this.loggedInUser);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+            });
+          }
+        }),
       });
     } on FirebaseAuthException catch (error) {
       // switch (error.code) {
@@ -220,7 +229,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
       //   default:
       //     errorMessage = "An undefined Error happened.";
       // }
-      Fluttertoast.showToast(msg: error.code, backgroundColor: Colors.redAccent, fontSize: 16, textColor: Colors.white);
+      Fluttertoast.showToast(msg: error.code, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white);
       print(error.code);
     }
 

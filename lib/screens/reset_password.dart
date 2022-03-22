@@ -59,7 +59,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     final resetPasswordButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
-      color: Colors.redAccent,
+      color: Colors.greenAccent[400],
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
@@ -80,7 +80,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.red),
+          icon: Icon(Icons.arrow_back, color: Colors.greenAccent[400]),
           onPressed: () {
             // passing this to our root
             Navigator.of(context).pop();

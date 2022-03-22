@@ -63,6 +63,16 @@ class _LoginScreenState extends State<LoginScreen> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        // focusedBorder: OutlineInputBorder(
+        //   borderSide: BorderSide(color: Colors.greenAccent[400])
+        // ),
+        // errorBorder: new OutlineInputBorder(
+        //   borderSide: new BorderSide(color: Colors.greenAccent[400],),
+        // ),
+        // errorStyle: TextStyle(
+        //   color: Colors.greenAccent[400],
+        //   fontSize: 13,
+        // ),
       )
     );
 
@@ -85,18 +95,29 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
+
           prefixIcon: Icon(Icons.vpn_key),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          // focusedBorder: OutlineInputBorder(
+          //     borderSide: BorderSide(color: Colors.greenAccent[400])
+          // ),
+          // errorBorder: new OutlineInputBorder(
+          //   borderSide: new BorderSide(color: Colors.greenAccent[400],),
+          // ),
+          // errorStyle: TextStyle(
+          //   color: Colors.greenAccent[400],
+          //   fontSize: 13,
+          // ),
         ));
 
     final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
-      color: Colors.redAccent,
+      color: Colors.greenAccent[400],
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
@@ -108,6 +129,24 @@ class _LoginScreenState extends State<LoginScreen> {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         )
+      ),
+    );
+
+    final phoneNumberButton = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.greenAccent[400],
+      child: MaterialButton(
+          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          minWidth: MediaQuery.of(context).size.width,
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhoneNumber()));
+          },
+          child: Text(
+            "LOGIN WITH PHONE NUMBER",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+          )
       ),
     );
 
@@ -130,33 +169,46 @@ class _LoginScreenState extends State<LoginScreen> {
                     emailField,
                     SizedBox(height: 25),
                     passwordField,
-                    SizedBox(height: 35),
-                    Obx(() => isLoading.value ? Center(child: CircularProgressIndicator(),) : loginButton),
-                    SizedBox(height: 15),
+                    SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhoneNumber()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ResetPassword()));
                           },
-                          child: Text("Sign in with Phone Number", style: TextStyle(fontSize: 17, color: Colors.redAccent,),)
+                          child: Text("FORGOT PASSWORD? ", style: TextStyle(fontSize: 16, color: Colors.greenAccent[400],),)
                         ),
                       ]
                     ),
                     SizedBox(height: 15),
+                    Obx(() => isLoading.value ? Center(child: CircularProgressIndicator(),) : loginButton),
+                    SizedBox(height: 15),
+                    phoneNumberButton,
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: <Widget>[
+                    //     GestureDetector(
+                    //       onTap: () {
+                    //         Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhoneNumber()));
+                    //       },
+                    //       child: Text("Sign in with Phone Number", style: TextStyle(fontSize: 17, color: Colors.greenAccent[400],),)
+                    //     ),
+                    //   ]
+                    // ),
+                    SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text("Don't have an account? ", style: TextStyle(fontSize: 16, color: Colors.black),),
+                        Text("New User? ", style: TextStyle(fontSize: 16, color: Colors.black),),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationScreen()));
                           },
                           child: Text(
-                            "SignUp",
+                            "REGISTER HERE",
                             style: TextStyle(
-                              color: Colors.redAccent,
+                              color: Colors.greenAccent[400],
                               fontWeight: FontWeight.bold,
                               fontSize: 17
                             ),
@@ -165,17 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ]
                     ),
                     SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ResetPassword()));
-                          },
-                          child: Text("Forgot Password? ", style: TextStyle(fontSize: 16, color: Colors.redAccent,),)
-                        ),
-                      ]
-                    )
+
                   ],
                 ),
               ),
@@ -199,9 +241,9 @@ class _LoginScreenState extends State<LoginScreen> {
               authController.userModel.value = this.loggedInUser;
               authController.isLogedIn.value = true;
               UserModel.saveUserToCache(this.loggedInUser);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
               }
             ),
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen())),
           }
         );
       } on FirebaseAuthException catch (error) {
@@ -227,7 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.redAccent, fontSize: 16, textColor: Colors.white);
+        Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white);
         print(error.code);
       }
     }

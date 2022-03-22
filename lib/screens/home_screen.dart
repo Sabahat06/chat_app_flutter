@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final logOutButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
-      color: Colors.redAccent,
+      color: Colors.greenAccent[400],
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
           UserModel.deleteCachedUser();
         },
         child: Text(
-          "Log out",
+          "LOGOUT",
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         )
@@ -54,7 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.greenAccent[400],
         title: const Text("Welcome"),
         centerTitle: true,
       ),
@@ -66,25 +68,38 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(height: 150, child: Image.asset("assets/logo.png", fit: BoxFit.contain),),
-              Text("Welcome Back", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+              Text("Welcome ${authController.userModel.value.firstName}", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
               SizedBox(height: 10,),
               Obx(() => authController.userModel.value.firstName == null && authController.userModel.value.secondName==null
                 ? Container()
                 : Row(
                   children: [
-                    Text("Name:  ",
+                    Container(
+                      width: Get.width*0.33,
+                      child: Text("Full Name",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        )
+                      ),
+                    ),
+                    Text(": ",
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 18
                       )
                     ),
-                    Text("${authController.userModel.value.firstName} ${authController.userModel.value.secondName}",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18
-                      )
+                    Container(
+                      width: Get.width*0.5 ,
+                      child: Text("${authController.userModel.value.firstName} ${authController.userModel.value.secondName}",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        )
+                      ),
                     ),
                   ],
                 ),
@@ -94,19 +109,67 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? Container()
                 : Row(
                   children: [
-                    Text("Email:  ",
+                    Container(
+                      width: Get.width*0.33,
+                      child: Text("Email",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        )
+                      ),
+                    ),
+                    Text(": ",
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 18
                       )
                     ),
-                    Text("${authController.userModel.value.email}",
+                    Container(
+                      width: Get.width*0.5,
+                      child: Text("${authController.userModel.value.email}",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 7,),
+              Obx(() => authController.userModel.value.phoneNumber == null
+                ? Container()
+                : Row(
+                  children: [
+                    Container(
+                      width: Get.width*0.33,
+                      child: Text("Phone Number",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        )
+                      ),
+                    ),
+                    Text(": ",
                       style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 18,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
+                        fontSize: 18
                       )
+                    ),
+                    Container(
+                      width: Get.width*0.5,
+                      child: Text("${authController.userModel.value.phoneNumber}",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        )
+                      ),
                     ),
                   ],
                 ),

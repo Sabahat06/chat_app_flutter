@@ -204,7 +204,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final signUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
-      color: Colors.redAccent,
+      color: Colors.greenAccent[400],
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
@@ -212,7 +212,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           signUp(emailEditingController.text, passwordEditingController.text);
         },
         child: Text(
-          "SignUp",
+          "SIGNUP",
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         )
@@ -225,7 +225,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.red),
+          icon: Icon(Icons.arrow_back, color: Colors.greenAccent[400]),
           onPressed: () {
             // passing this to our root
             Navigator.of(context).pop();
@@ -278,7 +278,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             postDetailsToFirestore()}
             )
           .catchError((e) {
-          Fluttertoast.showToast(msg: e.message, backgroundColor: Colors.redAccent, fontSize: 16, textColor: Colors.white,);
+          Fluttertoast.showToast(msg: e.message, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white,);
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
@@ -303,7 +303,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.redAccent, fontSize: 16, textColor: Colors.white);
+        Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white);
         print(error.code);
       }
     }
