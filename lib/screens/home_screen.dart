@@ -1,8 +1,7 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/AlertDialogeWidget.dart';
 import 'package:email_password_login/Globals/global_vars.dart';
-import 'package:email_password_login/dummy/dummy_chat.dart';
+import 'package:email_password_login/chat/chat_room.dart';
 import 'package:email_password_login/model/user_model.dart';
 import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/login_screen.dart';
@@ -44,7 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chats', style: TextStyle(fontSize: 16, color: Colors.white),),
+        backgroundColor: Colors.greenAccent[400],
+        title: const Text('Chats', style: TextStyle(fontSize: 18, color: Colors.white),),
         actions: [
           IconButton(
             onPressed: () {
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // print("you wanna chat with ${snapshot.data.docs[index].get('name')} and his user id is ${snapshot.data.docs[index].get('user_id')}");
                   GlobalVars.chatUserName = snapshot.data.docs[index].get('firstName').toString();
                   GlobalVars.chatUserId = snapshot.data.docs[index].get('uid').toString();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DummyChat()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom()));
                 },
                 child: snapshot.data.docs[index].get('uid') == GlobalVars.loggedInUserId
                   ? Container()
@@ -92,30 +92,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 50,
                         width: 50,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.orange),
+                          border: Border.all(color: Colors.greenAccent[400]),
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
                       title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             snapshot.data.docs[index].get('firstName'),
                             style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 17,
+                              fontSize: 18,
                             ),
                           ),
                           Padding(
                             padding:
-                            const EdgeInsets.only(left: 5, right: 5),
+                            const EdgeInsets.only(left: 0, right: 5),
                             child: Text(
-                              snapshot.data.docs[index].get('email'),
+                              snapshot.data.docs[index].get('email',),
+                              style: TextStyle(fontSize: 16, color: Colors.black54),
                             ),
                           ),
                           // Text(snapshot.data.docChanges[index].doc('title')),
                         ],
                       ),
+                      trailing: Icon(Icons.email_outlined, color: Colors.greenAccent[400],),
                     ),
                   ),
               );
