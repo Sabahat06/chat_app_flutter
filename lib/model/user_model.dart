@@ -6,13 +6,15 @@ class UserModel {
   String firstName;
   String secondName;
   String phoneNumber;
+  String imageUrl;
 
   UserModel({
     this.uid,
     this.email,
     this.firstName,
     this.secondName,
-    this.phoneNumber
+    this.phoneNumber,
+    this.imageUrl
   });
 
   // receiving data from server
@@ -23,6 +25,7 @@ class UserModel {
       firstName: map['firstName'],
       secondName: map['secondName'],
       phoneNumber: map['phoneNumber'],
+      imageUrl: map['imageUrl'],
     );
   }
 
@@ -41,6 +44,7 @@ class UserModel {
     data['firstName'] = this.firstName;
     data['secondName'] = this.secondName;
     data['phoneNumber'] = this.phoneNumber;
+    data['imageUrl'] = this.imageUrl;
     return data;
   }
 
@@ -51,7 +55,8 @@ class UserModel {
       'email': email,
       'firstName': firstName,
       'secondName': secondName,
-      'phoneNumber': phoneNumber
+      'phoneNumber': phoneNumber,
+      'imageUrl': imageUrl,
     };
   }
 

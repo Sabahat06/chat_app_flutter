@@ -95,6 +95,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           border: Border.all(color: Colors.greenAccent[400]),
                           borderRadius: BorderRadius.circular(30),
                         ),
+                        child: Image.network(
+                          snapshot.data.docs[index].get('imageUrl').toString() == null
+                            ? 'https://srmuniversity.ac.in/wp-content/uploads/professor/user-avatar-default.jpg'
+                            : snapshot.data.docs[index].get('imageUrl').toString(),
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                                    : null,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

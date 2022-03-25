@@ -3,6 +3,7 @@ import 'package:email_password_login/model/user_model.dart';
 import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -215,6 +216,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
+          signUpValidationForImage();
           signUp(emailEditingController.text, passwordEditingController.text);
         },
         child: Text(
@@ -250,7 +252,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 180, child: Image.asset("assets/logo.png", fit: BoxFit.contain,)),
+                    Obx(() => Center(
+                        child: Container(
+                          height: 120,
+                          width: 120,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(80), border: Border.all(color: Colors.greenAccent[400])),
+                          child: CircleAvatar(backgroundImage: authController.file.value.path == ''
+                            ? NetworkImage('https://srmuniversity.ac.in/wp-content/uploads/professor/user-avatar-default.jpg')
+                            : FileImage(authController.file.value),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  right: 2,
+                                  bottom: 10,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.greenAccent[400],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(3.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          pickImageDialog(context);
+                                        },
+                                        child: const Icon(Icons.camera_alt, size: 30,),
+                                      ),
+                                    )
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),),
                     SizedBox(height: 10),
                     firstNameField,
                     SizedBox(height: 10),
@@ -333,6 +368,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     userModel.firstName = firstNameEditingController.text;
     userModel.secondName = secondNameEditingController.text;
     userModel.phoneNumber = phoneNumberEditingController.text;
+    userModel.imageUrl = authController.imageFromFirebase;
 
 
     ///Storing User Locally
@@ -346,4 +382,64 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => HomeScreen()), (route) => false);
   }
+
+  pickImageDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: const Text("Complete Action Using"),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  authController.openGallery(true);
+                },
+                child: Column(
+                  children: const [
+                    Icon(
+                      Icons.image,
+                      color: Colors.greenAccent,
+                      size: 30,
+                    ),
+                    Text("Gallery")
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  authController.openGallery(false);
+                },
+                child: Column(
+                  children: const [
+                    Icon(
+                      Icons.camera_alt,
+                      color: Colors.greenAccent,
+                      size: 30,
+                    ),
+                    Text("Camera")
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      });
+  }
+
+  signUpValidationForImage(){
+    if(authController.imageFromFirebase.trim().length==0){
+      Fluttertoast.showToast(msg: 'Please Upload your image');
+      return false;
+    }
+    else
+      return true;
+  }
+
 }

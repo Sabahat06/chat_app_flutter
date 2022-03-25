@@ -24,7 +24,7 @@ class AlertDialogWidget extends StatelessWidget {
             'No',
             style: TextStyle(
               fontSize: 16,
-              color: Colors.green,
+              color: Colors.greenAccent[400],
               fontWeight: FontWeight.bold
             )
           ),
@@ -35,7 +35,7 @@ class AlertDialogWidget extends StatelessWidget {
             'Yes',
             style: TextStyle(
               fontSize: 16,
-              color: Colors.green,
+              color: Colors.greenAccent[400],
               fontWeight: FontWeight.bold
             ),
           ),

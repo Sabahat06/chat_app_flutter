@@ -1,10 +1,18 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:email_password_login/model/user_model.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-class AuthController extends GetxController{
+class AuthController extends GetxController {
+  firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
   Rx<UserModel> userModel = UserModel().obs;
+  String imageFromFirebase;
   // User user = FirebaseAuth.instance.currentUser;
   RxBool isLogedIn = false.obs;
+  Rx<File> file = File('').obs;
 
   Future<void> onInit() async {
     userModel.value = await UserModel.fromCache();
@@ -19,5 +27,42 @@ class AuthController extends GetxController{
   //   });
   // }
 
+  Future<void> openGallery(bool openGallary)  {
+    ImagePicker().getImage(
+        source: openGallary ? ImageSource.gallery : ImageSource.camera,
+        imageQuality: 15).then((imageFile) {
+      file.value = File(imageFile.path);
+      if(file.value != null) {
+        uploadFile();
+      }
+    });
+  }
+
+  Future uploadFile() async {
+    if (file.value == null) return;
+    final fileName = basename(file.value.path);
+    final destination = 'files/$fileName';
+
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance.ref(destination).child('file/');
+
+      UploadTask uploadTask;
+      uploadTask = ref.child(fileName).putFile(file.value);
+      // now get the url of image and store in firebase
+      var imageUrl;
+      imageUrl = await (await uploadTask).ref.getDownloadURL();
+      String url = imageUrl.toString();
+      print(url);
+      imageFromFirebase = url;
+
+      // await ref.putFile(file.value);
+      // String url = ref.getDownloadURL();
+      // print(url);
+      // UploadTask uploadTask;
+
+    } catch (e) {
+      print('error occured');
+    }
+  }
 
 }

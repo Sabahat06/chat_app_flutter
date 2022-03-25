@@ -237,7 +237,8 @@ class _ChatRoomState extends State<ChatRoom> {
         ),
       );
 
-    }else{
+    }
+    else{
       // others message - left side
       return Padding(
         padding: const EdgeInsets.only(right: 5.0),
