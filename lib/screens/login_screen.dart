@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_password_login/Globals/global_vars.dart';
 import 'package:email_password_login/model/user_model.dart';
 import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/home_screen.dart';
@@ -239,6 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
             FirebaseFirestore.instance.collection("users").doc(uid.user.uid).get().then((value) {
               this.loggedInUser = UserModel.fromMap(value.data());
               authController.userModel.value = this.loggedInUser;
+              GlobalVars.loggedInUserId = this.loggedInUser.uid;
               authController.isLogedIn.value = true;
               UserModel.saveUserToCache(this.loggedInUser);
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
