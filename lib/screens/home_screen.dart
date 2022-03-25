@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
+                        children: <Widget> [
                           Text(
                             snapshot.data.docs[index].get('firstName'),
                             style: const TextStyle(
