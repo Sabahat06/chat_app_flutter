@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   GlobalVars.chatUserId = snapshot.data.docs[index].get('uid').toString();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom()));
                 },
-                child: snapshot.data.docs[index].get('uid') == GlobalVars.loggedInUserId
+                child: snapshot.data.docs[index].get('uid') == authController.userModel.value.uid
                   ? Container()
                   : Card(
                     child: ListTile(
