@@ -6,6 +6,7 @@ class GlobalVars {
   static String chattingId;
   static String chatUserId;
   static String chatUserName;
+  static String userStatus;
 
   static String chatId=loggedInUserId+chatUserId;
 

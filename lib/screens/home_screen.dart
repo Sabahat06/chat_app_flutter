@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   User user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   AuthController authController = Get.find();
@@ -37,6 +37,26 @@ class _HomeScreenState extends State<HomeScreen> {
       UserModel.saveUserToCache(this.loggedInUser);
     });
     updateUserId();
+    WidgetsBinding.instance.addObserver(this);
+    // setUserStatus('Online');
+  }
+  setUserStatus(String value) {
+    userRef.doc(authController.userModel.value.uid).update({
+      "userStatus": value,
+    });
+    authController.userModel.value.userStatus = value;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed) {
+      setUserStatus('Online');
+    }
+    else {
+      setUserStatus('Offline');
+    }
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -82,10 +102,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   // print("you wanna chat with ${snapshot.data.docs[index].get('name')} and his user id is ${snapshot.data.docs[index].get('user_id')}");
                   GlobalVars.chatUserName = snapshot.data.docs[index].get('firstName').toString();
                   GlobalVars.chatUserId = snapshot.data.docs[index].get('uid').toString();
+                  GlobalVars.userStatus = snapshot.data.docs[index].get('userStatus').toString();
                   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     ChatRoom(snapshot.data.docs[index].get('imageUrl').toString() == null
                       ? 'https://srmuniversity.ac.in/wp-content/uploads/professor/user-avatar-default.jpg'
-                      : snapshot.data.docs[index].get('imageUrl').toString())
+                      : snapshot.data.docs[index].get('imageUrl').toString(),
+                     ),
                     )
                   );
                 },
@@ -157,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> logout(BuildContext context) async {
+    setUserStatus('Offline');
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
   }

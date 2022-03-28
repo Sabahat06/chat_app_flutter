@@ -7,6 +7,7 @@ class UserModel {
   String secondName;
   String phoneNumber;
   String imageUrl;
+  String userStatus;
 
   UserModel({
     this.uid,
@@ -14,7 +15,8 @@ class UserModel {
     this.firstName,
     this.secondName,
     this.phoneNumber,
-    this.imageUrl
+    this.imageUrl,
+    this.userStatus,
   });
 
   // receiving data from server
@@ -26,6 +28,7 @@ class UserModel {
       secondName: map['secondName'],
       phoneNumber: map['phoneNumber'],
       imageUrl: map['imageUrl'],
+      userStatus: map['status'],
     );
   }
 
@@ -35,6 +38,7 @@ class UserModel {
     firstName = json['firstName'];
     secondName = json['secondName'];
     phoneNumber = json['phoneNumber'];
+    userStatus = json['status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +49,7 @@ class UserModel {
     data['secondName'] = this.secondName;
     data['phoneNumber'] = this.phoneNumber;
     data['imageUrl'] = this.imageUrl;
+    data['status'] = this.userStatus;
     return data;
   }
 
@@ -57,6 +62,7 @@ class UserModel {
       'secondName': secondName,
       'phoneNumber': phoneNumber,
       'imageUrl': imageUrl,
+      'status': userStatus,
     };
   }
 

@@ -239,6 +239,8 @@ class _LoginScreenState extends State<LoginScreen> {
             Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.green, fontSize: 16, textColor: Colors.white),
             FirebaseFirestore.instance.collection("users").doc(uid.user.uid).get().then((value) {
               this.loggedInUser = UserModel.fromMap(value.data());
+              this.loggedInUser.userStatus = 'Online';
+              setUserStatus("Online", this.loggedInUser.uid);
               authController.userModel.value = this.loggedInUser;
               GlobalVars.loggedInUserId = this.loggedInUser.uid;
               authController.isLogedIn.value = true;
@@ -277,4 +279,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     isLoading.value = false;
   }
+
+  setUserStatus(String value, String userID) {
+    final userRef = FirebaseFirestore.instance.collection('users');
+    userRef.doc(userID).update({
+      "userStatus": value,
+    });
+  }
+
 }

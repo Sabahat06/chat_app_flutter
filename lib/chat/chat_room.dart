@@ -75,7 +75,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     children: <Widget>[
                       Text(GlobalVars.chatUserName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
                       const SizedBox(height: 2,),
-                      // Text("Online", style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
+                      Text(GlobalVars.userStatus, style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
                     ],
                   ),
                 ),

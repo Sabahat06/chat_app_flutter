@@ -370,6 +370,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     userModel.secondName = secondNameEditingController.text;
     userModel.phoneNumber = phoneNumberEditingController.text;
     userModel.imageUrl = authController.imageFromFirebase;
+    userModel.userStatus = 'Online';
 
 
     ///Storing User Locally
@@ -435,7 +436,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   signUpValidationForImage(){
-    if(authController.imageFromFirebase.trim().length==0){
+    if(authController.imageFromFirebase.trim().length==0)  {
       Fluttertoast.showToast(msg: 'Please Upload your image');
       return false;
     }
