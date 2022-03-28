@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_password_login/Globals/global_vars.dart';
 import 'package:email_password_login/model/user_model.dart';
 import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/home_screen.dart';
@@ -375,7 +376,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     authController.userModel.value = userModel;
     authController.isLogedIn.value = true;
     UserModel.saveUserToCache(userModel);
-
+    GlobalVars.loggedInUserId = user.uid;
     ///storing data in firebase
     await firebaseFirestore.collection("users").doc(user.uid).set(userModel.toMap());
     Fluttertoast.showToast(msg: "Account created successfully :) ");

@@ -82,7 +82,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   // print("you wanna chat with ${snapshot.data.docs[index].get('name')} and his user id is ${snapshot.data.docs[index].get('user_id')}");
                   GlobalVars.chatUserName = snapshot.data.docs[index].get('firstName').toString();
                   GlobalVars.chatUserId = snapshot.data.docs[index].get('uid').toString();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatRoom()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    ChatRoom(snapshot.data.docs[index].get('imageUrl').toString() == null
+                      ? 'https://srmuniversity.ac.in/wp-content/uploads/professor/user-avatar-default.jpg'
+                      : snapshot.data.docs[index].get('imageUrl').toString())
+                    )
+                  );
                 },
                 child: snapshot.data.docs[index].get('uid') == authController.userModel.value.uid
                   ? Container()
@@ -91,24 +96,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       leading: Container(
                         height: 50,
                         width: 50,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.greenAccent[400]),
+                        child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Image.network(
-                          snapshot.data.docs[index].get('imageUrl').toString() == null
-                            ? 'https://srmuniversity.ac.in/wp-content/uploads/professor/user-avatar-default.jpg'
-                            : snapshot.data.docs[index].get('imageUrl').toString(),
-                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
+                          child: Image.network(
+                            snapshot.data.docs[index].get('imageUrl').toString() == null
+                                ? 'https://srmuniversity.ac.in/wp-content/uploads/professor/user-avatar-default.jpg'
+                                : snapshot.data.docs[index].get('imageUrl').toString(),
+                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
                                     ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
                                     : null,
-                              ),
-                            );
-                          },
+                                ),
+                              );
+                            },
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       title: Column(

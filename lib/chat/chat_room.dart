@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ChatRoom extends StatefulWidget {
+  String imageUrl;
+  ChatRoom(this.imageUrl);
   @override
   _ChatRoomState createState() => _ChatRoomState();
 }
@@ -64,7 +66,7 @@ class _ChatRoomState extends State<ChatRoom> {
               children: <Widget>[
                 IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(Icons.arrow_back, color: Colors.greenAccent),),
                 const SizedBox(width: 2,),
-                const CircleAvatar(backgroundImage: NetworkImage("https://randomuser.me/api/portraits/men/5.jpg"), maxRadius: 20,),
+                CircleAvatar(backgroundImage: NetworkImage(widget.imageUrl), maxRadius: 20,),
                 const SizedBox(width: 12,),
                 Expanded(
                   child: Column(
