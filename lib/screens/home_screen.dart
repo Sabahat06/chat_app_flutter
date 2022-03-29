@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       authController.userModel.value = this.loggedInUser;
       UserModel.saveUserToCache(this.loggedInUser);
     });
+
     updateUserId();
     WidgetsBinding.instance.addObserver(this);
     // setUserStatus('Online');
