@@ -4,6 +4,7 @@ import 'package:email_password_login/Globals/global_vars.dart';
 import 'package:email_password_login/chat/chat_room.dart';
 import 'package:email_password_login/model/user_model.dart';
 import 'package:email_password_login/screens/auth_controller.dart';
+import 'package:email_password_login/screens/drawer.dart';
 import 'package:email_password_login/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -67,28 +68,33 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       appBar: AppBar(
         backgroundColor: Colors.greenAccent[400],
         title: const Text('Chats', style: TextStyle(fontSize: 18, color: Colors.white),),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialogWidget(
-                    title: 'Log Out',
-                    subTitle: "Are you sure to logout from your account?",
-                    onPositiveClick: () {
-                      Get.back();
-                      logout(context);
-                      authController.isLogedIn.value = false;
-                      UserModel.deleteCachedUser();
-                    },
-                  );
-                }
-              );
-            },
-            icon: Icon(Icons.logout, color: Colors.white,)
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       showDialog(
+        //         context: context,
+        //         builder: (BuildContext context) {
+        //           return AlertDialogWidget(
+        //             title: 'Log Out',
+        //             subTitle: "Are you sure to logout from your account?",
+        //             onPositiveClick: () {
+        //               Get.back();
+        //               logout(context);
+        //               authController.isLogedIn.value = false;
+        //               UserModel.deleteCachedUser();
+        //             },
+        //           );
+        //         }
+        //       );
+        //     },
+        //     icon: Icon(Icons.logout, color: Colors.white,)
+        //   ),
+        //   IconButton(
+        //     onPressed: () {
+        //     },
+        //     icon: Icon(Icons.more_vert, color: Colors.white,)
+        //   ),
+        // ],
       ),
       body: StreamBuilder(
         stream: ref.snapshots(),
@@ -170,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           );
         }
       ),
+      endDrawer: MyDrawer(),
     );
   }
 
@@ -178,12 +185,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     userRef.doc(GlobalVars.loggedInUserId).update({
       "uid": GlobalVars.loggedInUserId.toString(),
     });
-  }
-
-  Future<void> logout(BuildContext context) async {
-    setUserStatus('Offline');
-    await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 }
 

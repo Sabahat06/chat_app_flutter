@@ -13,6 +13,8 @@ class AuthController extends GetxController {
   // User user = FirebaseAuth.instance.currentUser;
   RxBool isLogedIn = false.obs;
   Rx<File> file = File('').obs;
+  bool updateProfileImageUploaded = false;
+  Rx<File> updateProfileFile = File('').obs;
 
   Future<void> onInit() async {
     userModel.value = await UserModel.fromCache();
@@ -38,10 +40,22 @@ class AuthController extends GetxController {
     });
   }
 
+  Future<void> openGalleryForUpdateProfile(bool openGallary)  {
+    ImagePicker().getImage(
+        source: openGallary ? ImageSource.gallery : ImageSource.camera,
+        imageQuality: 15).then((imageFile) {
+      updateProfileFile.value = File(imageFile.path);
+      if(updateProfileFile.value != null) {
+        updateProfileImageUploaded = true;
+        uploadFile();
+      }
+    });
+  }
+
   Future uploadFile() async {
     if (file.value == null) return;
     final fileName = basename(file.value.path);
-    final destination = 'files/$fileName';
+    final destination = '${userModel.value.uid}/$fileName';
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance.ref(destination).child('file/');

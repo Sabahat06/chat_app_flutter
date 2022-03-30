@@ -17,6 +17,7 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+
   AuthController authController = Get.find();
   RxBool isLoading = false.obs;
   final _auth = FirebaseAuth.instance;
@@ -311,6 +312,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
     );
   }
+
   void signUp(String email, String password) async {
     isLoading.value = true;
     if (_formKey.currentState.validate()) {
