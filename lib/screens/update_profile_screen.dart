@@ -346,9 +346,8 @@ class UpdateProfileScreen extends StatelessWidget {
   }
 
   void updateUserProfile(String firstNameValue, String secondNameValue, String emailValue, String phoneNumberValue, String passwordValue) async {
-
-    isLoading.value = true;
     if (_formKey.currentState.validate()) {
+      isLoading.value = true;
       try{
         await _auth.signInWithEmailAndPassword(email: userEmail, password: passwordValue).then((userCredential) {
           userCredential.user.updateEmail(emailValue);
@@ -396,7 +395,7 @@ class UpdateProfileScreen extends StatelessWidget {
         Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white);
         print(error.code);
       }
+      isLoading.value = true;
     }
-    isLoading.value = true;
   }
 }
