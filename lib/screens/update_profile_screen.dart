@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 class UpdateProfileScreen extends StatelessWidget {
   final userRef = FirebaseFirestore.instance.collection('users');
+  String userEmail;
 
   AuthController authController = Get.find();
   RxBool isLoading = false.obs;
@@ -24,6 +25,7 @@ class UpdateProfileScreen extends StatelessWidget {
   TextEditingController secondNameEditingController;
   TextEditingController emailEditingController;
   TextEditingController phoneNumberEditingController;
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class UpdateProfileScreen extends StatelessWidget {
     secondNameEditingController = TextEditingController(text: authController.userModel.value.secondName);
     emailEditingController = TextEditingController(text: authController.userModel.value.email);
     phoneNumberEditingController = TextEditingController(text: authController.userModel.value.phoneNumber);
+    userEmail = authController.userModel.value.email;
     ///first name field
     final firstNameField = TextFormField(
         autofocus: false,
@@ -115,6 +118,44 @@ class UpdateProfileScreen extends StatelessWidget {
         )
     );
 
+    final passwordField = TextFormField(
+        autofocus: false,
+        controller: passwordController,
+        obscureText: true,
+        validator: (value) {
+          RegExp regex = new RegExp(r'^.{6,}$');
+          if (value.isEmpty) {
+            return ("Password is required for login");
+          }
+          if (!regex.hasMatch(value)) {
+            return ("Enter Valid Password(Min. 6 Character)");
+          }
+        },
+        onSaved: (value) {
+          passwordController.text = value;
+        },
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+
+          prefixIcon: Icon(Icons.vpn_key),
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "Password",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          // focusedBorder: OutlineInputBorder(
+          //     borderSide: BorderSide(color: Colors.greenAccent[400])
+          // ),
+          // errorBorder: new OutlineInputBorder(
+          //   borderSide: new BorderSide(color: Colors.greenAccent[400],),
+          // ),
+          // errorStyle: TextStyle(
+          //   color: Colors.greenAccent[400],
+          //   fontSize: 13,
+          // ),
+        )
+    );
+
     ///Phone number field
     final phoneNumberField = TextFormField(
       autofocus: false,
@@ -157,7 +198,7 @@ class UpdateProfileScreen extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
-          updateUserProfile(firstNameEditingController.text, secondNameEditingController.text, emailEditingController.text, phoneNumberEditingController.text);
+          updateUserProfile(firstNameEditingController.text, secondNameEditingController.text, emailEditingController.text, phoneNumberEditingController.text, passwordController.text);
         },
         child: Text(
           "UPDATE PROFILE",
@@ -236,6 +277,8 @@ class UpdateProfileScreen extends StatelessWidget {
                     emailField,
                     SizedBox(height: 10),
                     phoneNumberField,
+                    SizedBox(height: 10),
+                    passwordField,
                     SizedBox(height: 15),
                     Obx(() => isLoading.value ? Center(child: CircularProgressIndicator(),) : updateProfile),
                     SizedBox(height: 10),
@@ -302,60 +345,58 @@ class UpdateProfileScreen extends StatelessWidget {
     );
   }
 
-  void updateUserProfile(String firstNameValue, String secondNameValue, String emailValue, String phoneNumberValue, ) async {
+  void updateUserProfile(String firstNameValue, String secondNameValue, String emailValue, String phoneNumberValue, String passwordValue) async {
 
     isLoading.value = true;
     if (_formKey.currentState.validate()) {
-      userRef.doc(authController.userModel.value.uid).update({
-        "firstName": firstNameValue,
-        "lastName": secondNameValue,
-        "email": emailValue,
-        "phoneNumber": phoneNumberValue,
-      });
-      isLoading.value = false;
-      Fluttertoast.showToast(msg: "Your Profile has been Updated Successfully", backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white,);
-      authController.userModel.value.firstName = firstNameValue;
-      authController.userModel.value.secondName = secondNameValue;
-      authController.userModel.value.email = emailValue;
-      authController.userModel.value.phoneNumber = phoneNumberValue;
-      if(authController.updateProfileImageUploaded) {
-        authController.userModel.value.imageUrl = authController.imageFromFirebase;
+      try{
+        await _auth.signInWithEmailAndPassword(email: userEmail, password: passwordValue).then((userCredential) {
+          userCredential.user.updateEmail(emailValue);
+          userRef.doc(authController.userModel.value.uid).update({
+            "firstName": firstNameValue,
+            "lastName": secondNameValue,
+            "email": emailValue,
+            "phoneNumber": phoneNumberValue,
+          });
+          isLoading.value = false;
+          Fluttertoast.showToast(msg: "Your Profile has been Updated Successfully", backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white,);
+          authController.userModel.value.firstName = firstNameValue;
+          authController.userModel.value.secondName = secondNameValue;
+          authController.userModel.value.email = emailValue;
+          authController.userModel.value.phoneNumber = phoneNumberValue;
+          if(authController.updateProfileImageUploaded) {
+            authController.userModel.value.imageUrl = authController.imageFromFirebase;
+          }
+          Get.back();
+        }
+        );
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+        }
+        Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white);
+        print(error.code);
       }
-
-      Get.back();
-      // try {
-      //   await _auth.createUserWithEmailAndPassword(email: email, password: password)
-      //     .then((value) => {
-      //     }
-      //   ).catchError((e) {
-      //     Fluttertoast.showToast(msg: e.message, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white,);
-      //   });
-      // } on FirebaseAuthException catch (error) {
-      //   switch (error.code) {
-      //     case "invalid-email":
-      //       errorMessage = "Your email address appears to be malformed.";
-      //       break;
-      //     case "wrong-password":
-      //       errorMessage = "Your password is wrong.";
-      //       break;
-      //     case "user-not-found":
-      //       errorMessage = "User with this email doesn't exist.";
-      //       break;
-      //     case "user-disabled":
-      //       errorMessage = "User with this email has been disabled.";
-      //       break;
-      //     case "too-many-requests":
-      //       errorMessage = "Too many requests";
-      //       break;
-      //     case "operation-not-allowed":
-      //       errorMessage = "Signing in with Email and Password is not enabled.";
-      //       break;
-      //     default:
-      //       errorMessage = "An undefined Error happened.";
-      //   }
-      //   Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white);
-      //   print(error.code);
-      // }
     }
+    isLoading.value = true;
   }
 }
