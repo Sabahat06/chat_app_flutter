@@ -244,6 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
               GlobalVars.loggedInUserId = this.loggedInUser.uid;
               authController.isLogedIn.value = true;
               UserModel.saveUserToCache(this.loggedInUser);
+              isLoading.value = false;
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
               }
             ),
@@ -272,11 +273,11 @@ class _LoginScreenState extends State<LoginScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
+        isLoading.value = false;
         Fluttertoast.showToast(msg: errorMessage, backgroundColor: Colors.greenAccent[400], fontSize: 16, textColor: Colors.white);
         print(error.code);
       }
     }
-    isLoading.value = false;
   }
 
   setUserStatus(String value, String userID) {

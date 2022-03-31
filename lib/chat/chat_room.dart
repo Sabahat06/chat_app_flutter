@@ -1,8 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/Globals/global_vars.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:email_password_login/screens/auth_controller.dart';
+import 'package:email_password_login/screens/show_image_screen.dart';
+import 'package:path/path.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -13,6 +21,9 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
+  AuthController authController = Get.find();
+  Rx<File> file = File('').obs;
+  String imageFromFirebaseChat;
   // CollectionReference ref = FirebaseFirestore.instance
   //     .collection("chat_room")
   //     .where('room_id',arrayContainsAny:[GlobalVars.loggedInUserId+"_"+GlobalVars.chatUserId,GlobalVars.chatUserId+"_"+GlobalVars.loggedInUserId] )
@@ -97,7 +108,9 @@ class _ChatRoomState extends State<ChatRoom> {
               child: Row(
                 children: <Widget>[
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      pickImageDialogForChat(context);
+                    },
                     child: Container(
                       height: 30,
                       width: 30,
@@ -129,7 +142,7 @@ class _ChatRoomState extends State<ChatRoom> {
                   FloatingActionButton(
                     onPressed: () {
                       if (msgController.text.isNotEmpty) {
-                        sendMessage(message: msgController.text.trim());
+                        sendMessage(message: msgController.text.trim(), isImage: false);
                         setState(() {});
                       } else {
                         print('una');
@@ -149,28 +162,21 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   Future userSignUp() async {
-    await FirebaseFirestore.instance
-        .collection("Users")
-        .where('Email', isEqualTo: 'emailCtr.text')
-        .get()
-        .then((value) {
+    await FirebaseFirestore.instance.collection("Users").where('Email', isEqualTo: 'emailCtr.text').get().then((value) {
       if (value.docs.length > 0) {}
     });
   }
 
-  sendMessage({@required String message}) {
-    var docRef = FirebaseFirestore.instance
-        .collection('messages')
-        .doc(chatId)
-        .collection(chatId)
-        .doc(DateTime.now().millisecondsSinceEpoch.toString());
+  sendMessage({String message, String urlImage, bool isImage}) {
+    var docRef = FirebaseFirestore.instance.collection('messages').doc(chatId).collection(chatId).doc(DateTime.now().millisecondsSinceEpoch.toString());
     listScrollController.animateTo(0.0, duration: Duration(microseconds: 300), curve: Curves.easeOut);
     FirebaseFirestore.instance.runTransaction((transaction) async {
       await transaction.set(docRef, {
-        'idFrom': currentUserId,
+        'idFrom': authController.userModel.value.uid,
         'idTo': chatUserId,
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        'content': message,
+        'content': message??'',
+        'image' : urlImage??'',
         'type': '0',
       });
     });
@@ -183,26 +189,28 @@ class _ChatRoomState extends State<ChatRoom> {
       child: chatId == ""
         ? Center(child: CircularProgressIndicator(),)
         : StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('messages').doc(chatId).collection(chatId).orderBy('timestamp', descending: true).limit(20).snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator(),);
-              } else {
-                listMessage = snapshot.data.docs;
-                final data = snapshot.requireData;
-                return ListView.builder(
-                  itemBuilder: (context, index) => createItem(index, snapshot.data.docs[index]),
-                  itemCount: data.size,
-                  reverse:  true,
-                  controller: listScrollController,
-                );
-              }
-            },
-          ),
+          stream: FirebaseFirestore.instance.collection('messages').doc(chatId).collection(chatId).orderBy('timestamp', descending: true).limit(20).snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator(),);
+            } else {
+              listMessage = snapshot.data.docs;
+              final data = snapshot.requireData;
+              return data.size == 0
+                  ? Center(child: Text('Type Message and start conversation with ${GlobalVars.chatUserName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.greenAccent[400]),),)
+                  : ListView.builder(
+                itemBuilder: (context, index) => createItem(index, snapshot.data.docs[index]),
+                itemCount: data.size,
+                reverse:  true,
+                controller: listScrollController,
+              );
+            }
+          },
+        ),
     );
   }
 
-  createItem(int index,  var document) {
+  createItem(int index, var document) {
     if(document['idFrom'] == chatUserId) {
       // my message - right side
       return Padding(
@@ -212,16 +220,43 @@ class _ChatRoomState extends State<ChatRoom> {
             children: [
               Column(
                 children: [
-                  Container(
-                    child: Text(document['content'],style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),
-                    padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                    // width: 200.0,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8.0),
+                  document['image'] == ''
+                    ? Container(
+                      child: Text(document['content'],style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),
+                      padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                      // width: 200.0,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      margin: EdgeInsets.only(right: 10.0),
+                    )
+                    : GestureDetector(
+                      onTap: () {
+                        Get.to(() => ShowImageScreen(imageUrl: document['image'], title: GlobalVars.chatUserName,), transition: Transition.circularReveal);
+                      },
+                      child: Container(
+                        height: Get.height*0.3,
+                        width: Get.width*0.35,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            document['image'],
+                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                                    : null,
+                                ),
+                              );
+                            },
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
-                    margin: EdgeInsets.only(right: 10.0),
-                  ),
                   // ClipPath(
                   //   clipper: MessageClipper(),
                   //   child: Container(
@@ -238,10 +273,8 @@ class _ChatRoomState extends State<ChatRoom> {
           ),
         ),
       );
-
     }
     else{
-      // others message - left side
       return Padding(
         padding: const EdgeInsets.only(right: 5.0),
         child: Container(
@@ -253,25 +286,43 @@ class _ChatRoomState extends State<ChatRoom> {
                 children: [
                   Column(
                     children: [
-                      Container(
-                        child: Text(document['content'],style: TextStyle(color: Colors.black,fontWeight: FontWeight.w400),),
-                        padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                        // width: 200.0,
-                        decoration: BoxDecoration(
-                          color: Colors.greenAccent[400],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        margin: EdgeInsets.only(left: 10.0),
+                      document['image'] == ''
+                        ? Container(
+                          child: Text(document['content'],style: TextStyle(color: Colors.black,fontWeight: FontWeight.w400),),
+                          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          // width: 200.0,
+                          decoration: BoxDecoration(
+                            color: Colors.greenAccent[400],
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          margin: EdgeInsets.only(left: 10.0),
+                        )
+                        : GestureDetector(
+                          onTap: () {
+                            Get.to(() => ShowImageScreen(imageUrl: document['image'], title: GlobalVars.chatUserName,), transition: Transition.circularReveal);
+                          },
+                          child: Container(
+                          height: Get.height*0.25,
+                          width: Get.width*0.25,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              document['image'],
+                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                                        : null,
+                                  ),
+                                );
+                              },
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                       ),
-                      // ClipPath(
-                      //   clipper: MessageClipper(),
-                      //   child: Container(
-                      //     alignment: Alignment.centerRight,
-                      //     height: 10,
-                      //     width: 200,
-                      //     color: Colors.greenAccent[400],
-                      //   ),
-                      // )
+                        ),
                     ],
                   ),
                 ],
@@ -282,6 +333,96 @@ class _ChatRoomState extends State<ChatRoom> {
           margin: EdgeInsets.only(bottom: 5.0),
         ),
       );
+    }
+  }
+
+  pickImageDialogForChat(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: const Text("Complete Action Using"),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  openGalleryForChat(true);
+                },
+                child: Column(
+                  children: const [
+                    Icon(
+                      Icons.image,
+                      color: Colors.greenAccent,
+                      size: 30,
+                    ),
+                    Text("Gallery")
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  openGalleryForChat(false);
+                },
+                child: Column(
+                  children: const [
+                    Icon(
+                      Icons.camera_alt,
+                      color: Colors.greenAccent,
+                      size: 30,
+                    ),
+                    Text("Camera")
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Future<void> openGalleryForChat(bool openGallary)  {
+    ImagePicker().getImage(
+      source: openGallary ? ImageSource.gallery : ImageSource.camera,
+      imageQuality: 15
+    ).then((imageFile) {
+      file.value = File(imageFile.path);
+      if(file.value != null) {
+        uploadFileInFirebaseChat();
+      }
+    });
+  }
+
+  Future uploadFileInFirebaseChat() async {
+    if (file.value == null) return;
+    final fileName = basename(file.value.path);
+    final destination = '${DateTime.now()}/$fileName';
+
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance.ref(destination).child('file/');
+
+      UploadTask uploadTask;
+      uploadTask = ref.child(fileName).putFile(file.value);
+      // now get the url of image and store in firebase
+      var imageUrl;
+      imageUrl = await (await uploadTask).ref.getDownloadURL();
+      String url = imageUrl.toString();
+      print(url);
+      imageFromFirebaseChat = url;
+      sendMessage(message: '', isImage: true, urlImage: url);
+      // await ref.putFile(file.value);
+      // String url = ref.getDownloadURL();
+      // print(url);
+      // UploadTask uploadTask;
+
+    } catch (e) {
+      print('error occured');
     }
   }
 

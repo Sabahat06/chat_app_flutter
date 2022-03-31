@@ -3,7 +3,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="Authentication"
+        android:label="Chat Room"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
