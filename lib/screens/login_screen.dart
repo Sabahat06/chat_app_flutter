@@ -235,8 +235,8 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         await _auth.signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
-            Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.green, fontSize: 16, textColor: Colors.white),
             FirebaseFirestore.instance.collection("users").doc(uid.user.uid).get().then((value) {
+              Fluttertoast.showToast(msg: "Login Successful", backgroundColor: Colors.red, fontSize: 16, textColor: Colors.white);
               this.loggedInUser = UserModel.fromMap(value.data());
               this.loggedInUser.userStatus = 'Online';
               setUserStatus("Online", this.loggedInUser.uid);
