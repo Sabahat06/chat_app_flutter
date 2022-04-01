@@ -189,7 +189,6 @@ class UpdateProfileScreen extends StatelessWidget {
       )
     );
 
-    ///signup button
     final updateProfile = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),

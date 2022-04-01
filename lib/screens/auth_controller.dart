@@ -67,7 +67,7 @@ class AuthController extends GetxController {
   Future uploadFileInFirebase() async {
     if (file.value == null) return;
     final fileName = basename(file.value.path);
-    final destination = '${userModel.value.uid}/$fileName';
+    final destination = 'files/$fileName';
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance.ref(destination).child('file/');

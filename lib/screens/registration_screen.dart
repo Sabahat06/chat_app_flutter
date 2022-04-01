@@ -34,7 +34,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final emailEditingController = new TextEditingController();
   final passwordEditingController = new TextEditingController();
   final confirmPasswordEditingController = new TextEditingController();
-  final phoneNumberEditingController = new TextEditingController();
+  final phoneNumberEditingController = new TextEditingController(text: '+92');
 
   @override
   Widget build(BuildContext context) {
@@ -189,8 +189,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       controller: confirmPasswordEditingController,
       obscureText: true,
       validator: (value) {
-        if (confirmPasswordEditingController.text !=
-            passwordEditingController.text) {
+        if (confirmPasswordEditingController.text != passwordEditingController.text) {
           return "Password don't match";
         }
         return null;
@@ -218,8 +217,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
-          signUpValidationForImage();
-          signUp(emailEditingController.text, passwordEditingController.text);
+          if(signUpValidationForImage()){
+            signUp(emailEditingController.text, passwordEditingController.text);
+          }
         },
         child: Text(
           "SIGNUP",
@@ -438,7 +438,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   signUpValidationForImage(){
-    if(authController.imageFromFirebase.trim().length==0)  {
+    if(authController.imageFromFirebase==null)  {
       Fluttertoast.showToast(msg: 'Please Upload your image');
       return false;
     }

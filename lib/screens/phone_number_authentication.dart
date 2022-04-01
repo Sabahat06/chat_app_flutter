@@ -26,7 +26,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
   String verficationIDReceived = '';
 
   // editing controller
-  final TextEditingController phoneController = new TextEditingController();
+  final TextEditingController phoneController = new TextEditingController(text: '+92');
   final TextEditingController otpController = new TextEditingController();
 
   // firebase
@@ -110,7 +110,9 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
           if(showOTPField.value) {
             verifyOTP(otpController.text);
           } else {
+            isLoading.value = true;
             verifyPhoneNumber(phoneController.text);
+            isLoading.value = false;
           }
         },
         child: Obx(
@@ -151,7 +153,7 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
                     SizedBox(height: 180, child: Image.asset("assets/logo.png", fit: BoxFit.contain,)),
                     Obx(() => Text( showOTPField.value ? "OTP Verification" : "Enter your Phone Number" , style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.greenAccent[400]),)),
                     SizedBox(height: 7),
-                    Text(showOTPField.value ? "Enter the OTP send to ${phoneController.text}" : 'We will send you the 6 digits verification code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
+                    Obx(() => Text(showOTPField.value ? "Enter the OTP send to ${phoneController.text}" : 'We will send you the 6 digits verification code', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),)),
                     SizedBox(height: 15),
                     Obx(() => showOTPField.value ? otpField : phoneField,),
                     SizedBox(height: 15),
@@ -169,7 +171,6 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
 
   // login function
   void verifyPhoneNumber(String number) async {
-    isLoading.value = true;
     _auth.verifyPhoneNumber(
       phoneNumber: number,
       verificationCompleted: (PhoneAuthCredential credential) async {
@@ -187,7 +188,6 @@ class _VerifyPhoneNumberState extends State<VerifyPhoneNumber> {
       },
       codeAutoRetrievalTimeout: (String verificationID) {}
     );
-    isLoading.value = false;
   }
 
   verifyOTP(String otp) async {
