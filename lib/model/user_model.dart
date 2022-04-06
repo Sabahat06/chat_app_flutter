@@ -79,6 +79,7 @@ class UserModel {
       return UserModel.fromJson(cachedUser);
   }
 
+
   /// member functions
 
   static Future<String> saveUserToCache(UserModel user) async{
