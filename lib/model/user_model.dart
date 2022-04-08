@@ -94,7 +94,6 @@ class UserModel {
   }
 
 
-
   static Future<String> deleteCachedUser()async{
     Mapped cacheJson = await Mapped.getInstance();
     try{
