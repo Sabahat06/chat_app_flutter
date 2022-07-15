@@ -28,7 +28,9 @@ dependencies:
   get: ^4.6.1
   cached_map: ^2.0.5
   image_picker: ^0.8.4
+  firebase_dynamic_links: ^3.0.1
   firebase_storage: ^10.0.2
+  share_plus: ^4.0.10
    
   flutter:
     sdk: flutter

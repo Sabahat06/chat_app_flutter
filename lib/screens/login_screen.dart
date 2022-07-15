@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/Globals/global_vars.dart';
 import 'package:email_password_login/model/user_model.dart';
 import 'package:email_password_login/screens/auth_controller.dart';
+import 'package:email_password_login/screens/firebase_dynamic_link_service.dart';
 import 'package:email_password_login/screens/home_screen.dart';
 import 'package:email_password_login/screens/phone_number_authentication.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key key}) : super(key: key);
@@ -36,7 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String errorMessage;
 
   @override
+  void initState() {
+    FirebaseDynamicLinkService.initDynamicLink(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     //email field
     final emailField = TextFormField(
       autofocus: false,
@@ -96,23 +105,12 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
-
           prefixIcon: Icon(Icons.vpn_key),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          // focusedBorder: OutlineInputBorder(
-          //     borderSide: BorderSide(color: Colors.greenAccent[400])
-          // ),
-          // errorBorder: new OutlineInputBorder(
-          //   borderSide: new BorderSide(color: Colors.greenAccent[400],),
-          // ),
-          // errorStyle: TextStyle(
-          //   color: Colors.greenAccent[400],
-          //   fontSize: 13,
-          // ),
         ));
 
     final loginButton = Material(
@@ -138,16 +136,16 @@ class _LoginScreenState extends State<LoginScreen> {
       borderRadius: BorderRadius.circular(10),
       color: Colors.greenAccent[400],
       child: MaterialButton(
-          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          minWidth: MediaQuery.of(context).size.width,
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhoneNumber()));
-          },
-          child: Text(
-            "LOGIN WITH PHONE NUMBER",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-          )
+        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => VerifyPhoneNumber()));
+        },
+        child: Text(
+          "LOGIN WITH PHONE NUMBER",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+        )
       ),
     );
 
@@ -223,6 +221,16 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: IconButton(
+          onPressed: () async {
+            String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(true);
+            print(generatedDeepLink);
+            Share.share(generatedDeepLink);
+          },
+          icon: Icon(Icons.share, color: Colors.white,),
         ),
       ),
     );
