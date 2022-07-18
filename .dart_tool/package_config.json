@@ -68,6 +68,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "csslib",
+      "rootUri": "file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/csslib-0.17.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "cupertino_icons",
       "rootUri": "file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.3",
       "packageUri": "lib/",
@@ -158,6 +164,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_neumorphic",
+      "rootUri": "file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_neumorphic-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5",
       "packageUri": "lib/",
@@ -190,6 +202,18 @@
     {
       "name": "get",
       "rootUri": "file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/get-4.6.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "glassmorphism",
+      "rootUri": "file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/glassmorphism-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "html",
+      "rootUri": "file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/html-0.15.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -476,7 +500,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2022-07-18T10:56:58.227265Z",
+  "generated": "2022-07-18T12:49:54.391558Z",
   "generator": "pub",
   "generatorVersion": "2.14.4"
 }

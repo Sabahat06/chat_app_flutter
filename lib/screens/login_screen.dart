@@ -233,6 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
               String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(true);
               progressing.value = false;
               Share.share(generatedDeepLink);
+              // Get.to(DynamicLinkScreen());
             },
             icon: Icon(Icons.share, color: Colors.white,),
           ),

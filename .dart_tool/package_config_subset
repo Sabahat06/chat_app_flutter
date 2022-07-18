@@ -46,6 +46,10 @@ cross_file
 2.12
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/cross_file-0.3.2/
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/cross_file-0.3.2/lib/
+csslib
+2.12
+file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/csslib-0.17.2/
+file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/csslib-0.17.2/lib/
 cupertino_icons
 2.12
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.3/
@@ -102,6 +106,10 @@ firebase_storage_web
 2.12
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage_web-3.0.3/
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage_web-3.0.3/lib/
+flutter_neumorphic
+2.12
+file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_neumorphic-3.2.0/
+file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_neumorphic-3.2.0/lib/
 flutter_plugin_android_lifecycle
 2.12
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5/
@@ -118,6 +126,14 @@ get
 2.12
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/get-4.6.1/
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/get-4.6.1/lib/
+glassmorphism
+2.12
+file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/glassmorphism-3.0.0/
+file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/glassmorphism-3.0.0/lib/
+html
+2.12
+file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/html-0.15.0/
+file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/html-0.15.0/lib/
 http
 2.14
 file:///Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.4/
