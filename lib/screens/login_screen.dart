@@ -7,6 +7,7 @@ import 'package:email_password_login/screens/home_screen.dart';
 import 'package:email_password_login/screens/phone_number_authentication.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
 import 'package:email_password_login/screens/reset_password.dart';
+import 'package:email_password_login/screens/screen_for_dynamic_links.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,6 +22,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  RxBool progressing = false.obs;
   // form key
   final _formKey = GlobalKey<FormState>();
   UserModel loggedInUser = UserModel();
@@ -223,14 +225,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: IconButton(
-          onPressed: () async {
-            String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(true);
-            print(generatedDeepLink);
-            Share.share(generatedDeepLink);
-          },
-          icon: Icon(Icons.share, color: Colors.white,),
+      floatingActionButton: Obx(
+        () => FloatingActionButton(
+          child: progressing.value ? Center(child: Container(height : 25, width: 25, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3,)),) : IconButton(
+            onPressed: () async {
+              progressing.value = true;
+              String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(true);
+              progressing.value = false;
+              Share.share(generatedDeepLink);
+            },
+            icon: Icon(Icons.share, color: Colors.white,),
+          ),
         ),
       ),
     );
