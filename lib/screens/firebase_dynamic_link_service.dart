@@ -30,7 +30,7 @@ class FirebaseDynamicLinkService{
     return _linkMessage;
   }
 
-  static Future<void> initDynamicLink(BuildContext context) {
+  static Future<void> initDynamicLink(BuildContext context) async {
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData pendingDynamicLinkData) async {
         final Uri deepLink = pendingDynamicLinkData.link;
@@ -42,13 +42,23 @@ class FirebaseDynamicLinkService{
         // }
 
         if(deepLink!=null) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => DynamicLinkScreen()));
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => DynamicLinkScreen()), (Route<dynamic> route) => false);
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => DynamicLinkScreen()));
           // Get.to(() => DynamicLinkScreen());
         }
       },
       onError: (OnLinkErrorException e) async {
         print(e);
-      }
+      },
     );
+
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data.link;
+
+    if(deepLink!=null) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => DynamicLinkScreen()), (Route<dynamic> route) => false);
+    } else {
+      return null;
+    }
   }
 }
