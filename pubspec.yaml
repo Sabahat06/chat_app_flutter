@@ -21,11 +21,13 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  google_mobile_ads: ^1.3.0
   cloud_firestore: ^2.5.1
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.1.0
   firebase_core: ^1.6.0
   get: ^4.6.1
+  textfield_search: ^0.10.0
   cached_map: ^2.0.5
   image_picker: ^0.8.4
   flutter_staggered_grid_view: ^0.4.0

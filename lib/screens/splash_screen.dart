@@ -27,11 +27,11 @@ class SplashScreen extends StatelessWidget {
   navigate() async {
     await Future.delayed(Duration(seconds: 3));
     Mapped.loadFileDirectly(cachedFileName: "slider").then((file) {
-      Get.off(()=>
+      Get.toNamed(
         authController.isLogedIn.value
-          ? HomeScreen()
-          : LoginScreen(),
-      );
+          ? '/homepage'
+          : '/login',
+        );
     });
   }
 }

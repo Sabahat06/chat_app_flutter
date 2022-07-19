@@ -1,13 +1,17 @@
 import 'dart:math';
 
 import 'package:email_password_login/screens/auth_controller.dart';
+import 'package:email_password_login/screens/home_screen.dart';
+import 'package:email_password_login/screens/login_screen.dart';
 import 'package:email_password_login/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -56,8 +60,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: generateMaterialColor(Colors.greenAccent[400]),
       ),
+        initialRoute: '/',
+        //when initial Route is given no need to add home widget for initial start point of app
+        //full app route structure
+        routes: {
+          '/': (context)=> SplashScreen(),
+          '/login': (context)=>LoginScreen(),
+          '/homepage': (context)=>HomeScreen(),
+        },
       debugShowCheckedModeBanner: false,
-      home: SplashScreen()
     );
   }
 }

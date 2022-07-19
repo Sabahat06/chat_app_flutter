@@ -247,6 +247,13 @@
             </list>
           </value>
         </entry>
+        <entry key="google_mobile_ads">
+          <value>
+            <list>
+              <option value="$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/google_mobile_ads-1.3.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="html">
           <value>
             <list>
@@ -492,6 +499,13 @@
             </list>
           </value>
         </entry>
+        <entry key="textfield_search">
+          <value>
+            <list>
+              <option value="$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/textfield_search-0.10.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="typed_data">
           <value>
             <list>
@@ -611,6 +625,7 @@
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.8/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/get-4.6.1/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/glassmorphism-3.0.0/lib" />
+      <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/google_mobile_ads-1.3.0/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/html-0.15.0/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.4/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib" />
@@ -645,6 +660,7 @@
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.2/lib" />
+      <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/textfield_search-0.10.0/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-6.1.2/lib" />
       <root url="file://$USER_HOME$/developer/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_android-6.0.14/lib" />

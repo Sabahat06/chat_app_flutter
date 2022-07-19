@@ -8,6 +8,7 @@ import 'package:email_password_login/screens/phone_number_authentication.dart';
 import 'package:email_password_login/screens/registration_screen.dart';
 import 'package:email_password_login/screens/reset_password.dart';
 import 'package:email_password_login/screens/screen_for_dynamic_links.dart';
+import 'package:email_password_login/screens/google_ads_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -229,11 +230,12 @@ class _LoginScreenState extends State<LoginScreen> {
         () => FloatingActionButton(
           child: progressing.value ? Center(child: Container(height : 25, width: 25, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3,)),) : IconButton(
             onPressed: () async {
-              progressing.value = true;
-              String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(true);
-              progressing.value = false;
-              Share.share(generatedDeepLink);
+              // progressing.value = true;
+              // String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(true);
+              // progressing.value = false;
+              // Share.share(generatedDeepLink);
               // Get.to(DynamicLinkScreen());
+              Get.to(GoogleAdsScreen());
             },
             icon: Icon(Icons.share, color: Colors.white,),
           ),
