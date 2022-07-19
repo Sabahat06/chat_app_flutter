@@ -230,12 +230,12 @@ class _LoginScreenState extends State<LoginScreen> {
         () => FloatingActionButton(
           child: progressing.value ? Center(child: Container(height : 25, width: 25, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3,)),) : IconButton(
             onPressed: () async {
-              // progressing.value = true;
-              // String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(true);
-              // progressing.value = false;
-              // Share.share(generatedDeepLink);
+              progressing.value = true;
+              String generatedDeepLink = await FirebaseDynamicLinkService.createDynamicLink(true);
+              progressing.value = false;
+              Share.share(generatedDeepLink);
               // Get.to(DynamicLinkScreen());
-              Get.to(GoogleAdsScreen());
+              // Get.to(GoogleAdsScreen());
             },
             icon: Icon(Icons.share, color: Colors.white,),
           ),
