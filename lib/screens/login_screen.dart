@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,6 +24,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  BannerAd bannerAd;
+  InterstitialAd interstitialAd;
+  RxBool isBannerAdLoaded = false.obs;
+  RxBool isInterstitialAdAdLoaded = false.obs;
   RxBool progressing = false.obs;
   // form key
   final _formKey = GlobalKey<FormState>();
@@ -43,7 +48,49 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     FirebaseDynamicLinkService.initDynamicLink(context);
+    initBannerAd();
+    initInterstitialAd();
     super.initState();
+  }
+
+  initInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: InterstitialAd.testAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: onAdLoaded,
+        onAdFailedToLoad: (error) {}
+      )
+    );
+  }
+
+  onAdLoaded(InterstitialAd ad) {
+    interstitialAd = ad;
+    isInterstitialAdAdLoaded.value = true;
+    interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        interstitialAd.dispose();
+        initInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        interstitialAd.dispose();
+        initInterstitialAd();
+      }
+    );
+  }
+
+  initBannerAd() {
+    bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: BannerAd.testAdUnitId,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          isBannerAdLoaded.value = true;
+        }
+      ),
+      request: AdRequest()
+    );
+    bannerAd.load();
   }
 
   @override
@@ -76,37 +123,27 @@ class _LoginScreenState extends State<LoginScreen> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        // focusedBorder: OutlineInputBorder(
-        //   borderSide: BorderSide(color: Colors.greenAccent[400])
-        // ),
-        // errorBorder: new OutlineInputBorder(
-        //   borderSide: new BorderSide(color: Colors.greenAccent[400],),
-        // ),
-        // errorStyle: TextStyle(
-        //   color: Colors.greenAccent[400],
-        //   fontSize: 13,
-        // ),
       )
     );
 
     //password field
     final passwordField = TextFormField(
-        autofocus: false,
-        controller: passwordController,
-        obscureText: true,
-        validator: (value) {
-          RegExp regex = new RegExp(r'^.{6,}$');
-          if (value.isEmpty) {
-            return ("Password is required for login");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("Enter Valid Password(Min. 6 Character)");
-          }
-        },
-        onSaved: (value) {
-          passwordController.text = value;
-        },
-        textInputAction: TextInputAction.done,
+      autofocus: false,
+      controller: passwordController,
+      obscureText: true,
+      validator: (value) {
+        RegExp regex = new RegExp(r'^.{6,}$');
+        if (value.isEmpty) {
+          return ("Password is required for login");
+        }
+        if (!regex.hasMatch(value)) {
+          return ("Enter Valid Password(Min. 6 Character)");
+        }
+      },
+      onSaved: (value) {
+        passwordController.text = value;
+      },
+      textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.vpn_key),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -114,7 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-        ));
+        )
+    );
 
     final loginButton = Material(
       elevation: 5,
@@ -166,7 +204,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 200, child: Image.asset("assets/logo.png", fit: BoxFit.contain,)),
+                    GestureDetector(
+                      onTap: () {
+                        if(isInterstitialAdAdLoaded.value) {
+                          interstitialAd.show();
+                        }
+                      },
+                      child: SizedBox(
+                        height: 200,
+                        child: Image.asset("assets/logo.png",
+                          fit: BoxFit.contain,
+                        )
+                      )
+                    ),
                     SizedBox(height: 45),
                     emailField,
                     SizedBox(height: 25),
@@ -240,6 +290,14 @@ class _LoginScreenState extends State<LoginScreen> {
             icon: Icon(Icons.share, color: Colors.white,),
           ),
         ),
+      ),
+      bottomNavigationBar: Obx(() => isBannerAdLoaded.value
+        ? Container(
+          height: bannerAd.size.height.toDouble(),
+          width: bannerAd.size.width.toDouble(),
+          child: AdWidget(ad: bannerAd,),
+        )
+        : SizedBox()
       ),
     );
   }

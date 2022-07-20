@@ -2,6 +2,7 @@
     package="com.sbs.email_password_login">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
    <application
         android:label="Chat Room"
         android:icon="@mipmap/ic_launcher">
