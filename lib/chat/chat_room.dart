@@ -197,8 +197,8 @@ class _ChatRoomState extends State<ChatRoom> {
               listMessage = snapshot.data.docs;
               final data = snapshot.requireData;
               return data.size == 0
-                  ? Center(child: Text('Type Message and start conversation with ${GlobalVars.chatUserName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.greenAccent[400]),),)
-                  : ListView.builder(
+                ? Center(child: Text('Type Message and start conversation with ${GlobalVars.chatUserName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.greenAccent[400]),),)
+                : ListView.builder(
                 itemBuilder: (context, index) => createItem(index, snapshot.data.docs[index]),
                 itemCount: data.size,
                 reverse:  true,
