@@ -71,3 +71,67 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+// import 'package:email_password_login/model/cities.dart';
+// import 'package:flutter/material.dart';
+//
+// void main() => runApp(MyApp());
+//
+// class MyApp extends StatelessWidget {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Woolha.com Flutter Tutorial',
+//       home:  Scaffold(
+//         appBar: AppBar(
+//           title: const Text('Woolha.com Flutter Tutorial'),
+//           backgroundColor: Colors.teal,
+//         ),
+//         body: Column(
+//           children: [
+//             AutoCompleteExample(),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+// List<Cities> citiesOptions = <Cities>[
+//   Cities(name: 'Wah Cantt', country: '', lng: '', lat: ''),
+//   Cities(name: 'Peshawar', country: '', lng: '', lat: ''),
+//   Cities(name: 'Islamabad', country: '', lng: '', lat: ''),
+//   Cities(name: 'Lahore', country: '', lng: '', lat: ''),
+//   Cities(name: 'Karachi', country: '', lng: '', lat: ''),
+//   Cities(name: 'Quetta', country: '', lng: '', lat: ''),
+//   Cities(name: 'Rawalpindi', country: '', lng: '', lat: ''),
+// ];
+//
+// class AutoCompleteExample extends StatefulWidget {
+//
+//   @override
+//   State<StatefulWidget> createState() => _AutoCompleteExampleState();
+// }
+//
+// class _AutoCompleteExampleState extends State<AutoCompleteExample> {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.all(15.0),
+//       child: Autocomplete<Cities>(
+//         optionsBuilder: (TextEditingValue textEditingValue) {
+//           return citiesOptions.where((Cities city) {
+//             return city.name.toLowerCase().startsWith(textEditingValue.text.toLowerCase());
+//           });
+//         },
+//         onSelected: (Cities city) {
+//           debugPrint('You just selected ${city.name}');
+//         },
+//         displayStringForOption: (Cities city) => city.name,
+//       ),
+//     );
+//   }
+// }
