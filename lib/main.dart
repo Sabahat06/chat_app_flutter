@@ -31,23 +31,23 @@ MaterialColor generateMaterialColor(Color color) {
   });
 }
 
-  int tintValue(int value, double factor) => max(0, min((value + ((255 - value) * factor)).round(), 255));
+int tintValue(int value, double factor) => max(0, min((value + ((255 - value) * factor)).round(), 255));
 
-  Color tintColor(Color color, double factor) => Color.fromRGBO(
+Color tintColor(Color color, double factor) => Color.fromRGBO(
     tintValue(color.red, factor),
     tintValue(color.green, factor),
     tintValue(color.blue, factor),
     1
-  );
+);
 
-  int shadeValue(int value, double factor) => max(0, min(value - (value * factor).round(), 255));
+int shadeValue(int value, double factor) => max(0, min(value - (value * factor).round(), 255));
 
-  Color shadeColor(Color color, double factor) => Color.fromRGBO(
+Color shadeColor(Color color, double factor) => Color.fromRGBO(
     shadeValue(color.red, factor),
     shadeValue(color.green, factor),
     shadeValue(color.blue, factor),
     1
-  );
+);
 
 class MyApp extends StatelessWidget {
   AuthController authController = Get.put(AuthController());
@@ -59,14 +59,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: generateMaterialColor(Colors.greenAccent[400]),
       ),
-        initialRoute: '/',
-        //when initial Route is given no need to add home widget for initial start point of app
-        //full app route structure
-        routes: {
-          '/': (context)=> SplashScreen(),
-          '/login': (context)=>LoginScreen(),
-          '/homepage': (context)=>HomeScreen(),
-        },
+      initialRoute: '/',
+      //when initial Route is given no need to add home widget for initial start point of app
+      //full app route structure
+      routes: {
+        '/': (context)=> SplashScreen(),
+        '/login': (context)=>LoginScreen(),
+        '/homepage': (context)=>HomeScreen(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_map/cached_map.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/screens/auth_controller.dart';
@@ -23,6 +25,7 @@ class SplashScreen extends StatelessWidget {
                 height: 250,
                 child: Image.asset("assets/logo.png",)
               ),
+              /// Clipped Container
               // ClipPath(
               //   clipper: CustomClipPathTopContainer(),
               //   child: Container(
@@ -30,6 +33,8 @@ class SplashScreen extends StatelessWidget {
               //     color: Colors.green,
               //   ),
               // ),
+              //
+              /// Adding border to clipped Container
               // Padding(
               //   padding: const EdgeInsets.all(8.0),
               //   child: Stack(
