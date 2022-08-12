@@ -8,6 +8,7 @@ firebase_core_web=/Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.d
 firebase_dynamic_links=/Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_dynamic_links-3.0.2/
 firebase_storage=/Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage-10.0.5/
 firebase_storage_web=/Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage_web-3.0.3/
+flutter_local_notifications=/Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications-9.5.3+1/
 flutter_plugin_android_lifecycle=/Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5/
 fluttertoast=/Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.8/
 google_mobile_ads=/Users/mianimranshah/developer/flutter/.pub-cache/hosted/pub.dartlang.org/google_mobile_ads-1.3.0/

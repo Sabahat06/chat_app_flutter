@@ -4,12 +4,45 @@ import 'package:cached_map/cached_map.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:math' as math;
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
   AuthController authController = Get.put(AuthController());
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  @override
+  initState() {
+    super.initState();
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+  }
+
+  Future onSelectNotification(String payload) async {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          title: Text("PayLoad"),
+          content: Text("Payload : $payload"),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     navigate();
@@ -25,6 +58,29 @@ class SplashScreen extends StatelessWidget {
                 height: 250,
                 child: Image.asset("assets/logo.png",)
               ),
+              /// Local Notification related Buttons
+              // new RaisedButton(
+              //   onPressed: _showNotificationWithSound,
+              //   child: new Text('Show Notification With Sound'),
+              // ),
+              // new SizedBox(
+              //   height: 30.0,
+              // ),
+              // new RaisedButton(
+              //   onPressed: _showNotificationWithoutSound,
+              //   child: new Text('Show Notification Without Sound'),
+              // ),
+              // new SizedBox(
+              //   height: 30.0,
+              // ),
+              // new RaisedButton(
+              //   onPressed: _showNotificationWithDefaultSound,
+              //   child: new Text('Show Notification With Default Sound'),
+              // ),
+              // new SizedBox(
+              //   height: 30.0,
+              // ),
+
               /// Clipped Container
               // ClipPath(
               //   clipper: CustomClipPathTopContainer(),
@@ -64,8 +120,69 @@ class SplashScreen extends StatelessWidget {
     );
   }
 
+  // If you have skipped step 4 then Method 1 is not for you
+
+// Method 1
+  Future _showNotificationWithSound() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name',
+        importance: Importance.max,
+        priority: Priority.high
+    );
+    var iOSPlatformChannelSpecifics =
+    new IOSNotificationDetails(sound: "slow_spring_board.aiff");
+    var platformChannelSpecifics = new NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Test Notification',
+      'This is test Notification in Flutter App',
+      platformChannelSpecifics,
+      payload: 'Custom_Sound',
+    );
+  }
+// Method 2
+  Future _showNotificationWithDefaultSound() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name',
+        importance: Importance.max,
+        priority: Priority.high
+    );
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Test Notification',
+      'This is test Notification in Flutter App',
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
+// Method 3
+  Future _showNotificationWithoutSound() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name',
+        color: Colors.green,
+        colorized: true,
+        autoCancel: false,
+        fullScreenIntent: true,
+        playSound: false,
+        importance: Importance.max,
+        priority: Priority.high
+    );
+    var iOSPlatformChannelSpecifics =
+    new IOSNotificationDetails(presentSound: false);
+    var platformChannelSpecifics = new NotificationDetails(android: androidPlatformChannelSpecifics, iOS:  iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Test Notification',
+      'This is test Notification in Flutter App',
+      platformChannelSpecifics,
+      payload: 'No_Sound',
+    );
+  }
+
   navigate() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 600));
     Mapped.loadFileDirectly(cachedFileName: "slider").then((file) {
       Get.toNamed(
         authController.isLogedIn.value

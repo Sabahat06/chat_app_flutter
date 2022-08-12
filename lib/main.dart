@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:email_password_login/screens/auth_controller.dart';
 import 'package:email_password_login/screens/home_screen.dart';
 import 'package:email_password_login/screens/login_screen.dart';
